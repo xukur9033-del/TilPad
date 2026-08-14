@@ -1,0 +1,16 @@
+# 本地配置文件（不同电脑路径不同，不要提交）
+local.properties
+
+# Gradle 编译产物
+.gradle/
+build/
+app/build/
+*.apk
+
+# IDE 文件
+.idea/
+*.iml
+.DS_Store
+
+# Gradle wrapper jar（由 Android Studio 或 gradle wrapper 自动生成）
+gradle/wrapper/gradle-wrapper.jar
