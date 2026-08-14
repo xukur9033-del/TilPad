@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 按键放大预览弹出布局 -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="56dp"
+    android:minHeight="56dp"
+    android:gravity="center"
+    android:textSize="36sp"
+    android:textColor="#333333"
+    android:background="#E0E0E0"
+    android:padding="4dp" />
