@@ -1,0 +1,8 @@
+<resources>
+
+    <!-- 应用主题。本 app 无 Activity，主题主要用于 Service 窗口的基础样式。 -->
+    <style name="TilPadTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+</resources>
