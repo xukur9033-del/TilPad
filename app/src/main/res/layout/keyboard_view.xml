@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  输入法键盘视图布局。
+  根元素为自定义的 NurKeyboardView（继承 KeyboardView）。
+  KeyboardView 的框架属性（android:keyBackground 等）在此设置。
+-->
+<com.tilpad.ime.NurKeyboardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#1B1B1B"
+    android:keyBackground="@drawable/key_background"
+    android:keyTextColor="#333333"
+    android:keyTextSize="22sp"
+    android:labelTextSize="14sp"
+    android:keyPreviewLayout="@layout/key_preview"
+    android:keyPreviewOffset="2dp"
+    android:verticalGap="2dp"
+    android:horizontalGap="2dp"
+    android:shadowRadius="0.0" />
