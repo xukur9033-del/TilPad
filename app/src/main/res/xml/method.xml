@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  输入法 subtype 定义。
+  每个 subtype 对应一种语言/输入模式，会出现在系统输入法切换列表中。
+  - imeSubtypeLocale: 语言区域代码
+  - imeSubtypeMode: keyboard 表示物理/软键盘输入
+-->
+<input-method xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 维吾尔文（拉丁字母输入，自动转换为阿拉伯字母） -->
+    <subtype
+        android:label="@string/subtype_uyghur"
+        android:imeSubtypeLocale="ug_CN"
+        android:imeSubtypeMode="keyboard" />
+
+    <!-- 中文拼音 -->
+    <subtype
+        android:label="@string/subtype_chinese"
+        android:imeSubtypeLocale="zh_CN"
+        android:imeSubtypeMode="keyboard" />
+
+    <!-- 英文 -->
+    <subtype
+        android:label="@string/subtype_english"
+        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeMode="keyboard" />
+
+</input-method>
