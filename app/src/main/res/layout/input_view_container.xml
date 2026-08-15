@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  输入法容器布局 — Badam 风格。
-  顶部：语言切换横条（维语/中文/En）
-  中间：候选词栏（中文拼音用）
+  输入法容器布局 v2 — Badam 风格顶部工具栏。
+  顶部：工具栏（下拉/齿轮/布局/表情/头像/快捷图标/维语/中文/En）
+  中间：候选词栏
+  中间2：表情/符号面板（可切换）
   底部：键盘视图
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,55 +13,126 @@
     android:background="#E8EAED"
     android:layout_alignParentBottom="true">
 
-    <!-- 顶部语言切换栏 -->
+    <!-- ====== 顶部工具栏 ====== -->
     <LinearLayout
-        android:id="@+id/language_bar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:orientation="horizontal"
         android:background="#FFFFFF"
-        android:weightSum="3"
-        android:padding="0dp">
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
 
+        <!-- 下拉菜单 -->
+        <ImageView
+            android:id="@+id/btn_dropdown"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/arrow_down_badge"
+            android:padding="6dp"
+            android:contentDescription="菜单" />
+
+        <!-- 设置齿轮 -->
+        <ImageView
+            android:id="@+id/btn_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:padding="6dp"
+            android:contentDescription="设置" />
+
+        <!-- 键盘布局按钮 -->
+        <ImageView
+            android:id="@+id/btn_layout"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:padding="6dp"
+            android:contentDescription="布局" />
+
+        <!-- 表情笑脸 -->
+        <ImageView
+            android:id="@+id/btn_emoji"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_myplaces"
+            android:padding="6dp"
+            android:contentDescription="表情" />
+
+        <!-- 头像方框 -->
+        <ImageView
+            android:id="@+id/btn_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_my_calendar"
+            android:padding="6dp"
+            android:contentDescription="头像" />
+
+        <!-- 维语快捷图标 -->
+        <TextView
+            android:id="@+id/btn_quick_uyghur"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="ئۇ"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textColor="#666666" />
+
+        <!-- 分隔线 -->
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:background="#DDDDDD"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
+
+        <!-- 维语切换 -->
         <TextView
             android:id="@+id/btn_lang_uyghur"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:text="维语"
+            android:textSize="12sp"
             android:gravity="center"
-            android:text="ئۇيغۇرچە"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
             android:background="#2563EB"
-            android:padding="2dp" />
+            android:layout_marginEnd="2dp" />
 
+        <!-- 中文切换 -->
         <TextView
             android:id="@+id/btn_lang_chinese"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:text="中"
+            android:textSize="12sp"
             android:gravity="center"
-            android:text="中文"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textColor="#666666"
-            android:textSize="13sp"
             android:background="#F5F5F5"
-            android:padding="2dp" />
+            android:layout_marginEnd="2dp" />
 
+        <!-- En 切换 -->
         <TextView
             android:id="@+id/btn_lang_english"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
             android:text="En"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textColor="#666666"
-            android:textSize="13sp"
-            android:background="#F5F5F5"
-            android:padding="2dp" />
+            android:background="#F5F5F5" />
 
     </LinearLayout>
 
-    <!-- 候选词栏（中文拼音候选） -->
+    <!-- ====== 候选词栏 ====== -->
     <HorizontalScrollView
         android:id="@+id/candidate_scroll"
         android:layout_width="match_parent"
@@ -79,7 +151,28 @@
 
     </HorizontalScrollView>
 
-    <!-- 键盘视图 -->
+    <!-- ====== 表情/符号面板（可切换显示） ====== -->
+    <FrameLayout
+        android:id="@+id/panel_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:background="#FFFFFF"
+        android:visibility="gone">
+
+        <GridView
+            android:id="@+id/emoji_grid"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:numColumns="8"
+            android:horizontalSpacing="4dp"
+            android:verticalSpacing="4dp"
+            android:padding="4dp"
+            android:background="#FFFFFF" />
+
+    </FrameLayout>
+
+    <!-- ====== 键盘视图 ====== -->
     <com.tilpad.ime.NurKeyboardView
         android:id="@+id/keyboard"
         android:layout_width="match_parent"

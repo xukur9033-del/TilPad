@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  维语键盘布局 — 严格参照用户截图，字母位置一比一摆放。
-  字母字体白色，按键背景可自定义图片。
-  底部：符号键、123键、删除键、回车键。
-  语言切换已移到顶部横条，不在底部。
+  维语键盘布局 — 严格参照截图。
+  三行维语字母顺序固定不变。
+  底部增加 ئ 键。
 
   Row 1: چ ۋ ئې ر ت ي ئۇ كۆ ئو پ ژ (11键)
   Row 2: ھ س د ئا ئە ئى ق ك ل ف گ (11键)
   Row 3: ز ش غ ئۆ ب ن م خ ج ئۈ (10键)
-  Row 4: [符] [123] [space] [⌫] [↵]
+  Row 4: [符] [123] [ئ] [space] [⌫] [↵]
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="9%p"
@@ -46,7 +45,7 @@
         <Key android:codes="0" android:keyLabel="گ"  android:keyOutputText="گ"  android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 3: ز ش غ ئۆ ب ن م خ ج ئۈ (10键，宽度调大) -->
+    <!-- Row 3: ز ش غ ئۆ ب ن م خ ج ئۈ -->
     <Row>
         <Key android:codes="0" android:keyLabel="ز"  android:keyOutputText="ز"  android:keyWidth="9.5%p" android:keyEdgeFlags="left" />
         <Key android:codes="0" android:keyLabel="ش"  android:keyOutputText="ش"  android:keyWidth="9.5%p" />
@@ -60,15 +59,16 @@
         <Key android:codes="0" android:keyLabel="ئۈ" android:keyOutputText="ئۈ" android:keyWidth="9.5%p" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 4: [符] [123] [space] [⌫] [↵] -->
+    <!-- Row 4: [符] [123] [ئ] [space] [⌫] [↵] -->
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="-100" android:keyLabel="符" android:keyWidth="14%p"
+        <Key android:codes="-100" android:keyLabel="符" android:keyWidth="12%p"
              android:keyEdgeFlags="left" />
-        <Key android:codes="-103" android:keyLabel="123" android:keyWidth="14%p" />
+        <Key android:codes="-103" android:keyLabel="123" android:keyWidth="12%p" />
+        <Key android:codes="0" android:keyLabel="ئ" android:keyOutputText="ئ" android:keyWidth="10%p" />
         <Key android:codes="32"   android:keyLabel="ئۇيغۇرچە" android:keyWidth="30%p" />
-        <Key android:codes="-5"   android:keyLabel="⌫" android:keyWidth="14%p"
+        <Key android:codes="-5"   android:keyLabel="⌫" android:keyWidth="12%p"
              android:isRepeatable="true" />
-        <Key android:codes="-4"   android:keyLabel="↵" android:keyWidth="14%p"
+        <Key android:codes="-4"   android:keyLabel="↵" android:keyWidth="12%p"
              android:isRepeatable="true" android:keyEdgeFlags="right" />
     </Row>
 

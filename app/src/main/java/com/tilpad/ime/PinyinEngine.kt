@@ -218,7 +218,7 @@ object PinyinEngine {
         "mou" to listOf("某", "谋", "牟", "眸"),
         "mu" to listOf("木", "目", "母", "幕", "墓", "幕", "暮", "慕", "牟", "牧", "穆", "姆", "拇"),
         "na" to listOf("那", "拿", "哪", "钠", "呐", "娜", "捺"),
-        "nai" to listOf("乃", "奶", "耐", "奈", " Nail", "艿"),
+        "nai" to listOf("乃", "奶", "耐", "奈", "奶", "艿"),
         "nan" to listOf("南", "男", "难", "楠", "喃", "腩"),
         "nang" to listOf("囊", "囔"),
         "nao" to listOf("脑", "闹", "挠", "恼", "淖", "瑙"),

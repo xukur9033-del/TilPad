@@ -1,44 +1,31 @@
 package com.tilpad.ime
 
-import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
-import android.text.TextUtils
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
+import android.widget.ArrayAdapter
+import android.widget.GridView
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 
 /**
- * TilPad 输入法服务 —— 核心控制器（完整版）。
+ * TilPad 输入法服务 v3 — 完整版。
  *
- * ## 功能列表
- *
- * ### 1. 顶部语言切换栏（Badam 风格）
- * 横条上显示 维语 / 中文 / En 三个标签，点击直接切换。
- * 当前语言的标签高亮蓝色，其他灰色。
- *
- * ### 2. 维语连写（composing 模式，已修复，不改动）
- * 维语字母累积到 [composingBuffer]，通过 setComposingText 显示连写效果。
- * 空格/回车/切换时 commitText 上屏。
- *
- * ### 3. 中文拼音输入（新增）
- * 中文模式下，输入的拼音字母累积到 [pinyinBuffer]。
- * 调用 [PinyinEngine] 查询候选词，显示在候选词栏。
- * 用户点击候选词 → commitText 上屏汉字。
- *
- * ### 4. 删除键（已修复）
- * 维语 composing：从缓冲区删最后字符
- * 中文拼音：从缓冲区删最后字符
- * 有选中文本：commitText("") 删除选中
- * 普通模式：deleteSurroundingText(1, 0)
+ * 功能：
+ * 1. 顶部工具栏（下拉/齿轮/布局/表情/头像/快捷图标/维语/中文/En）
+ * 2. 候选词栏（中文拼音）
+ * 3. 表情面板（可切换显示）
+ * 4. 维语 composing 连写（不改动）
+ * 5. 中文拼音输入
+ * 6. 删除键修复
  */
 @Suppress("DEPRECATION")
 class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
@@ -49,19 +36,39 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     private lateinit var langBtnEnglish: TextView
     private lateinit var candidateScroll: HorizontalScrollView
     private lateinit var candidateContainer: LinearLayout
+    private lateinit var panelContainer: View
+    private lateinit var emojiGrid: GridView
+    private lateinit var btnEmoji: View
+    private lateinit var btnSettings: View
+    private lateinit var btnQuickUyghur: View
 
-    /** 维语 composing 缓冲区 */
     private val composingBuffer = StringBuilder()
-
-    /** 中文拼音缓冲区 */
     private val pinyinBuffer = StringBuilder()
-
-    /** 当前候选词列表 */
     private var candidates: List<String> = emptyList()
 
-    // ============================================================
-    // 生命周期
-    // ============================================================
+    /** 表情面板是否显示 */
+    private var emojiPanelVisible = false
+
+    /** Emoji 表情列表 */
+    private val emojiList = listOf(
+        "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆",
+        "😉", "😊", "😋", "😎", "😍", "😘", "🥰", "😗",
+        "🤔", "🤨", "😐", "😑", "😶", "🙄", "😏", "😣",
+        "😥", "😮", "🤐", "😯", "😪", "😫", "🥱", "😴",
+        "😛", "😜", "😝", "🤤", "😒", "😓", "😔", "😕",
+        "🙃", "🤑", "😖", "😡", "😢", "😭", "😤", "👬",
+        "👎", "👌", "✌", "🤞", "🤟", "🤙", "👈", "👉",
+        "👆", "👇", "☝", "✋", "🤚", "🖐", "👋", "🤝",
+        "💪", "🙏", "🤲", "❤", "🧡", "💛", "💚", "💙",
+        "💜", "🖤", "🤍", "🤎", "💔", "❣", "💕", "💞",
+        "🔥", "⭐", "🌟", "✨", "⚡", "☀", "🌙", "☁",
+        "🌈", "☂", "❄", "☃", "⚽", "🏀", "🏈", "⚾",
+        "🎉", "🎊", "🎈", "🎁", "🎂", "🍰", "☕", "🍵",
+        "🍎", "🍊", "🍋", "🍌", "🍉", "🍇", "🍓", "🥝",
+        "🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑",
+        "🏠", "🏢", "🏥", "🏦", "🏨", "🏫", "🏬", "🏭",
+        "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗"
+    )
 
     override fun onCreateInputView(): View? {
         val container = layoutInflater.inflate(R.layout.input_view_container, null) as View
@@ -76,10 +83,33 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         candidateScroll = container.findViewById(R.id.candidate_scroll)
         candidateContainer = container.findViewById(R.id.candidate_container)
 
-        // 设置语言切换按钮点击事件
+        panelContainer = container.findViewById(R.id.panel_container)
+        emojiGrid = container.findViewById(R.id.emoji_grid)
+
+        btnEmoji = container.findViewById(R.id.btn_emoji)
+        btnSettings = container.findViewById(R.id.btn_settings)
+        btnQuickUyghur = container.findViewById(R.id.btn_quick_uyghur)
+
+        // 语言切换按钮
         langBtnUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
         langBtnChinese.setOnClickListener { switchToLanguage(NurKeyboardView.Language.CHINESE) }
         langBtnEnglish.setOnClickListener { switchToLanguage(NurKeyboardView.Language.ENGLISH) }
+
+        // 表情按钮 — 切换表情面板
+        btnEmoji.setOnClickListener { toggleEmojiPanel() }
+
+        // 设置按钮 — 打开设置页
+        btnSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
+
+        // 维语快捷图标 — 直接切换到维语
+        btnQuickUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
+
+        // 设置 emoji grid adapter
+        setupEmojiGrid()
 
         updateLanguageBar()
 
@@ -91,6 +121,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         composingBuffer.clear()
         pinyinBuffer.clear()
         hideCandidates()
+        hideEmojiPanel()
     }
 
     override fun onFinishInput() {
@@ -100,14 +131,50 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     }
 
     // ============================================================
+    // 表情面板
+    // ============================================================
+
+    private fun setupEmojiGrid() {
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            emojiList
+        )
+        emojiGrid.adapter = adapter
+        emojiGrid.setOnItemClickListener { _, _, position, _ ->
+            val ic = currentInputConnection ?: return@setOnItemClickListener
+            ic.commitText(emojiList[position], 1)
+        }
+    }
+
+    private fun toggleEmojiPanel() {
+        if (emojiPanelVisible) hideEmojiPanel() else showEmojiPanel()
+    }
+
+    private fun showEmojiPanel() {
+        emojiPanelVisible = true
+        keyboardView.visibility = View.GONE
+        panelContainer.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            240 * resources.displayMetrics.density.toInt()
+        )
+        panelContainer.visibility = View.VISIBLE
+    }
+
+    private fun hideEmojiPanel() {
+        emojiPanelVisible = false
+        panelContainer.visibility = View.GONE
+        keyboardView.visibility = View.VISIBLE
+    }
+
+    // ============================================================
     // 语言切换
     // ============================================================
 
     private fun switchToLanguage(lang: NurKeyboardView.Language) {
-        // 先提交当前未完成的内容
         commitComposing()
         commitPinyin()
-
+        hideEmojiPanel()
         keyboardView.switchToLanguage(lang)
         updateLanguageBar()
     }
@@ -138,7 +205,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         val ic = currentInputConnection ?: return
 
         when (primaryCode) {
-            // 语言切换键（保留兼容旧布局，现在主用顶部栏）
             NurKeyboardView.KEYCODE_LANGUAGE_SWITCH -> {
                 switchToLanguage(
                     when (keyboardView.currentLanguage) {
@@ -149,7 +215,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                 )
             }
 
-            // 清空键
             NurKeyboardView.KEYCODE_CLEAR -> {
                 composingBuffer.clear()
                 pinyinBuffer.clear()
@@ -157,13 +222,9 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                 ic.deleteSurroundingText(1000, 0)
             }
 
-            // 退格
             Keyboard.KEYCODE_DELETE -> handleBackspace(ic)
-
-            // 回车
             Keyboard.KEYCODE_DONE -> handleEnter(ic)
 
-            // Shift
             Keyboard.KEYCODE_SHIFT -> {
                 if (keyboardView.currentLanguage == NurKeyboardView.Language.UYGHUR && !keyboardView.isSymbolMode) {
                     commitComposing()
@@ -173,7 +234,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                 }
             }
 
-            // 数字符号切换
             NurKeyboardView.KEYCODE_SYMBOL_SWITCH -> {
                 commitComposing()
                 commitPinyin()
@@ -186,8 +246,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
             else -> {
                 if (primaryCode > 0) {
-                    val ch = primaryCode.toChar()
-                    handleCharacter(ch, ic)
+                    handleCharacter(primaryCode.toChar(), ic)
                 }
             }
         }
@@ -197,7 +256,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         val ic = currentInputConnection ?: return
         val outputText = text?.toString() ?: return
 
-        // 符号模式下，直接输出
         if (keyboardView.isSymbolMode) {
             ic.commitText(outputText, 1)
             return
@@ -205,13 +263,10 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
         when (keyboardView.currentLanguage) {
             NurKeyboardView.Language.UYGHUR -> {
-                // 维语 composing 模式（已修复的连写逻辑，不改动）
                 composingBuffer.append(outputText)
                 ic.setComposingText(composingBuffer.toString(), 1)
             }
             NurKeyboardView.Language.CHINESE -> {
-                // 中文模式：维语字母键不应该在中文模式下有 outputText
-                // 如果有就直接输出
                 ic.commitText(outputText, 1)
             }
             NurKeyboardView.Language.ENGLISH -> {
@@ -241,9 +296,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                 }
             }
             NurKeyboardView.Language.CHINESE -> {
-                // 中文拼音模式
                 if (ch == ' ') {
-                    // 空格：选第一个候选词，或直接输出拼音
                     if (candidates.isNotEmpty()) {
                         ic.commitText(candidates[0], 1)
                         pinyinBuffer.clear()
@@ -256,11 +309,9 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                         ic.commitText(" ", 1)
                     }
                 } else if (ch.isLetter()) {
-                    // 累积拼音
                     pinyinBuffer.append(ch.lowercaseChar())
                     updatePinyinCandidates(ic)
                 } else {
-                    // 标点符号等直接输出
                     commitPinyin()
                     ic.commitText(ch.toString(), 1)
                 }
@@ -277,21 +328,17 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     private fun updatePinyinCandidates(ic: InputConnection) {
         val pinyin = pinyinBuffer.toString()
-
         if (pinyin.isEmpty()) {
             hideCandidates()
             return
         }
 
-        // 查找候选词
         candidates = PinyinEngine.lookup(pinyin)
 
         if (candidates.isEmpty()) {
-            // 没有候选词，显示原始拼音
             ic.setComposingText(pinyin, 1)
             hideCandidates()
         } else {
-            // 显示第一个候选词为 composing，其余在候选栏
             ic.setComposingText(candidates[0], 1)
             showCandidates()
         }
@@ -299,7 +346,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     private fun showCandidates() {
         candidateContainer.removeAllViews()
-
         if (candidates.isEmpty()) {
             hideCandidates()
             return
@@ -311,7 +357,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             tv.textSize = 16f
             tv.setTextColor(Color.parseColor("#333333"))
             tv.setPadding(24, 0, 24, 0)
-            tv.gravity = Gravity.CENTER_VERTICAL
+            tv.gravity = android.view.Gravity.CENTER_VERTICAL
             tv.setOnClickListener {
                 val ic = currentInputConnection
                 if (ic != null) {
@@ -322,7 +368,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             }
             candidateContainer.addView(tv)
 
-            // 添加分隔线
             if (index < candidates.size - 1) {
                 val divider = View(this)
                 divider.layoutParams = LinearLayout.LayoutParams(1, 24).apply {
@@ -346,7 +391,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     // ============================================================
 
     private fun handleBackspace(ic: InputConnection) {
-        // 1. 中文拼音模式：从拼音缓冲区删
+        // 1. 中文拼音模式
         if (keyboardView.currentLanguage == NurKeyboardView.Language.CHINESE
             && !keyboardView.isSymbolMode
             && pinyinBuffer.isNotEmpty()
@@ -361,7 +406,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             return
         }
 
-        // 2. 维语 composing 模式：从缓冲区删
+        // 2. 维语 composing 模式
         if (keyboardView.currentLanguage == NurKeyboardView.Language.UYGHUR
             && !keyboardView.isSymbolMode
             && composingBuffer.isNotEmpty()
@@ -375,7 +420,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             return
         }
 
-        // 3. 有选中文本时：删除选中内容
+        // 3. 有选中文本
         val selectedText = ic.getSelectedText(0)
         if (selectedText != null && selectedText.isNotEmpty()) {
             ic.commitText("", 1)
@@ -431,7 +476,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             pinyinBuffer.clear()
             return
         }
-        // 如果有候选词，提交第一个；否则提交原始拼音
         if (candidates.isNotEmpty()) {
             ic.commitText(candidates[0], 1)
         } else {
@@ -440,10 +484,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         pinyinBuffer.clear()
         hideCandidates()
     }
-
-    // ============================================================
-    // OnKeyboardActionListener 其余回调
-    // ============================================================
 
     override fun onPress(primaryCode: Int) {}
     override fun onRelease(primaryCode: Int) {}

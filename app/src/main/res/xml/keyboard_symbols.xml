@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  数字符号键盘 — 点击 123 键后显示此页面。
-  使用普通数字 1 2 3 4 5 6 7 8 9 0（非波斯数字）。
-  左下角 ABC 键返回字母键盘。
+  数字符号键盘 — 普通数字 + 常用符号 + 身份证符号。
+  点击 123 键后显示此页面。
 
   Row 0: 1 2 3 4 5 6 7 8 9 0
   Row 1: @ # $ % & * - + = /
   Row 2: ( ) " ' : ; , . ? !
   Row 3: [ABC] [space] [⌫] [↵]
+
+  身份证常用符号在顶部工具栏的符号面板中。
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="10%p"
