@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main"
+    android:background="#F0F2F5"
     android:fillViewport="true">
 
     <LinearLayout
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- ====== 顶部 Header（Telegram 风格渐变蓝） ====== -->
+        <!-- ====== 顶部 Header ====== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,207 +19,362 @@
             android:gravity="center"
             android:orientation="vertical"
             android:paddingTop="40dp"
-            android:paddingBottom="32dp"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp">
+            android:paddingBottom="24dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
-            <!-- 圆形 App 图标 -->
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:src="@drawable/ic_launcher"
-                android:scaleType="centerCrop"
-                android:background="@drawable/bg_icon_blue"
-                android:padding="8dp"
-                android:contentDescription="@string/app_name" />
+                android:contentDescription="TilPad" />
 
-            <!-- 应用名 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/app_name"
-                android:textColor="@color/text_white"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:text="TilPad 维语输入法"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp" />
 
-            <!-- 版本号 -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="版本 1.1"
-                android:textColor="#CCFFFFFF"
-                android:textSize="13sp" />
+                android:text="版本 2.0"
+                android:textColor="#BBDEFB"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp" />
 
         </LinearLayout>
 
-        <!-- ====== 设置分组 1: 输入法 ====== -->
-        <TextView
-            style="@style/SectionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="输入法设置" />
-
+        <!-- ====== 测试输入框 ====== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_card_rounded"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="16dp"
+            android:background="@drawable/card_bg"
+            android:padding="16dp">
 
-            <!-- 设置项：启用输入法 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试输入"
+                android:textColor="#1976D2"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/test_input"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="在此输入测试维语、中文..."
+                android:background="@drawable/edit_bg"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击输入框，切换到 TilPad 键盘即可测试"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:layout_marginTop="6dp" />
+
+        </LinearLayout>
+
+        <!-- ====== 皮肤中心 ====== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/card_bg"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="皮肤中心"
+                android:textColor="#1976D2"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/skin_default"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="#E3F2FD"
+                    android:layout_marginEnd="6dp"
+                    android:padding="8dp">
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="#2563EB"
+                        android:layout_marginBottom="6dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="默认蓝"
+                        android:textSize="11sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/skin_dark"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="#ECEFF1"
+                    android:layout_marginEnd="6dp"
+                    android:padding="8dp">
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="#37474F"
+                        android:layout_marginBottom="6dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="深色"
+                        android:textSize="11sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/skin_custom"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="#FFF3E0"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@android:drawable/ic_menu_gallery"
+                        android:layout_marginBottom="6dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="自定义"
+                        android:textSize="11sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ====== 功能入口 ====== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="16dp"
+            android:background="@drawable/card_bg"
+            android:padding="4dp">
+
+            <!-- 启用输入法 -->
             <LinearLayout
                 android:id="@+id/item_enable_ime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:background="?android:attr/selectableItemBackground">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_blue"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_input_enable"
-                    android:contentDescription="启用" />
-
-                <LinearLayout
+                    android:background="#2563EB"
+                    android:layout_marginEnd="12dp" />
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/SettingItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="启用 TilPad 输入法" />
-
-                    <TextView
-                        style="@style/SettingItemSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="在系统设置中开启" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="" />
+                    android:text="启用 TilPad 输入法"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#999999" />
             </LinearLayout>
 
-            <!-- 分隔线 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginStart="64dp"
-                android:background="@color/divider" />
+                android:background="#EEEEEE"
+                android:layout_marginStart="56dp" />
 
-            <!-- 设置项：切换输入法 -->
+            <!-- 切换输入法 -->
             <LinearLayout
                 android:id="@+id/item_switch_ime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:background="?android:attr/selectableItemBackground">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_green"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_switch_ime"
-                    android:contentDescription="切换" />
-
-                <LinearLayout
+                    android:background="#4CAF50"
+                    android:layout_marginEnd="12dp" />
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
+                    android:text="切换默认输入法"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#999999" />
+            </LinearLayout>
 
-                    <TextView
-                        style="@style/SettingItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="切换默认输入法" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#EEEEEE"
+                android:layout_marginStart="56dp" />
 
-                    <TextView
-                        style="@style/SettingItemSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="设为当前键盘" />
-                </LinearLayout>
+            <!-- 表情中心 -->
+            <LinearLayout
+                android:id="@+id/item_emoji"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="" />
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="#FF9800"
+                    android:layout_marginEnd="12dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="表情中心"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开发中"
+                    android:textSize="12sp"
+                    android:textColor="#999999" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#EEEEEE"
+                android:layout_marginStart="56dp" />
+
+            <!-- 符号面板 -->
+            <LinearLayout
+                android:id="@+id/item_symbols"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground">
+
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="#9C27B0"
+                    android:layout_marginEnd="12dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="符号面板"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#999999" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- ====== 设置分组 2: 偏好设置 ====== -->
-        <TextView
-            style="@style/SectionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="偏好设置" />
-
+        <!-- ====== 偏好设置 ====== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_card_rounded"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/card_bg"
+            android:padding="4dp">
 
-            <!-- 设置项：键盘震动 -->
+            <!-- 键盘震动 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:gravity="center_vertical"
+                android:padding="12dp">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_orange"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_vibrate"
-                    android:contentDescription="震动" />
-
+                    android:background="#00BCD4"
+                    android:layout_marginEnd="12dp" />
                 <TextView
-                    style="@style/SettingItemTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:text="键盘震动" />
-
+                    android:text="键盘震动"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_vibrate"
                     android:layout_width="wrap_content"
@@ -227,40 +382,32 @@
                     android:checked="true" />
             </LinearLayout>
 
-            <!-- 分隔线 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginStart="64dp"
-                android:background="@color/divider" />
+                android:background="#EEEEEE"
+                android:layout_marginStart="56dp" />
 
-            <!-- 设置项：按键声音 -->
+            <!-- 按键声音 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:gravity="center_vertical"
+                android:padding="12dp">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_purple"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_sound"
-                    android:contentDescription="声音" />
-
+                    android:background="#FF5722"
+                    android:layout_marginEnd="12dp" />
                 <TextView
-                    style="@style/SettingItemTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:text="按键声音" />
-
+                    android:text="按键声音"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_sound"
                     android:layout_width="wrap_content"
@@ -268,40 +415,32 @@
                     android:checked="false" />
             </LinearLayout>
 
-            <!-- 分隔线 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginStart="64dp"
-                android:background="@color/divider" />
+                android:background="#EEEEEE"
+                android:layout_marginStart="56dp" />
 
-            <!-- 设置项：深色模式 -->
+            <!-- 深色模式 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:gravity="center_vertical"
+                android:padding="12dp">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_teal"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_dark_mode"
-                    android:contentDescription="深色" />
-
+                    android:background="#455A64"
+                    android:layout_marginEnd="12dp" />
                 <TextView
-                    style="@style/SettingItemTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:text="深色模式" />
-
+                    android:text="深色模式"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/switch_dark_mode"
                     android:layout_width="wrap_content"
@@ -311,141 +450,96 @@
 
         </LinearLayout>
 
-        <!-- ====== 设置分组 3: 关于 ====== -->
-        <TextView
-            style="@style/SectionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="关于" />
-
+        <!-- ====== 关于 ====== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_card_rounded"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/card_bg"
+            android:padding="4dp">
 
-            <!-- 设置项：关于 TilPad -->
             <LinearLayout
                 android:id="@+id/item_about"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:background="?android:attr/selectableItemBackground">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_blue"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_info"
-                    android:contentDescription="关于" />
-
-                <LinearLayout
+                    android:background="#3F51B5"
+                    android:layout_marginEnd="12dp" />
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/SettingItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="关于 TilPad" />
-
-                    <TextView
-                        style="@style/SettingItemSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="维语输入法 v1.1" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="" />
+                    android:text="关于 TilPad"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#999999" />
             </LinearLayout>
 
-            <!-- 分隔线 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginStart="64dp"
-                android:background="@color/divider" />
+                android:background="#EEEEEE"
+                android:layout_marginStart="56dp" />
 
-            <!-- 设置项：反馈建议 -->
             <LinearLayout
                 android:id="@+id/item_feedback"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:background="?android:attr/selectableItemBackground">
 
-                <ImageView
+                <View
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_red"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_feedback"
-                    android:contentDescription="反馈" />
-
-                <LinearLayout
+                    android:background="#E91E63"
+                    android:layout_marginEnd="12dp" />
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/SettingItemTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="反馈建议" />
-
-                    <TextView
-                        style="@style/SettingItemSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="帮助我们改进" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_right"
-                    android:contentDescription="" />
+                    android:text="反馈建议"
+                    android:textSize="15sp"
+                    android:textColor="#333333" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textSize="20sp"
+                    android:textColor="#999999" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- ====== 底部版权 ====== -->
+        <!-- 底部版权 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="32dp"
-            android:paddingBottom="32dp"
-            android:text="TilPad 维语输入法\nMade with care"
-            android:textColor="@color/text_secondary"
+            android:text="TilPad © 2026"
+            android:textColor="#999999"
             android:textSize="12sp"
-            android:lineSpacingExtra="4dp" />
+            android:gravity="center"
+            android:paddingBottom="20dp" />
 
     </LinearLayout>
 

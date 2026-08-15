@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  输入法容器布局 — Badam 风格。
+  顶部：语言切换横条（维语/中文/En）
+  中间：候选词栏（中文拼音用）
+  底部：键盘视图
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#E8EAED"
+    android:layout_alignParentBottom="true">
+
+    <!-- 顶部语言切换栏 -->
+    <LinearLayout
+        android:id="@+id/language_bar"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:weightSum="3"
+        android:padding="0dp">
+
+        <TextView
+            android:id="@+id/btn_lang_uyghur"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="ئۇيغۇرچە"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:background="#2563EB"
+            android:padding="2dp" />
+
+        <TextView
+            android:id="@+id/btn_lang_chinese"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="中文"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:background="#F5F5F5"
+            android:padding="2dp" />
+
+        <TextView
+            android:id="@+id/btn_lang_english"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="En"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:background="#F5F5F5"
+            android:padding="2dp" />
+
+    </LinearLayout>
+
+    <!-- 候选词栏（中文拼音候选） -->
+    <HorizontalScrollView
+        android:id="@+id/candidate_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/candidate_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp" />
+
+    </HorizontalScrollView>
+
+    <!-- 键盘视图 -->
+    <com.tilpad.ime.NurKeyboardView
+        android:id="@+id/keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#E8EAED"
+        android:keyBackground="@drawable/key_background"
+        android:keyTextColor="#FFFFFF"
+        android:keyTextSize="22sp"
+        android:labelTextSize="14sp"
+        android:keyPreviewLayout="@layout/key_preview"
+        android:keyPreviewOffset="2dp"
+        android:verticalGap="5dp"
+        android:horizontalGap="2dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:shadowRadius="0.0" />
+
+</LinearLayout>

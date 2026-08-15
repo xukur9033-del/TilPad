@@ -1,109 +1,182 @@
 package com.tilpad.ime
 
+import android.content.Context
+import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
+import android.text.TextUtils
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
+import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 
 /**
- * TilPad 输入法服务 —— 整个 IME 的核心控制器。
+ * TilPad 输入法服务 —— 核心控制器（完整版）。
  *
- * ## 关键设计
+ * ## 功能列表
  *
- * ### 维语连写修复（composing 模式）
- * 维语字母必须连写。之前每按一个字母就 commitText 一次，
- * 导致字母之间被系统断开，无法连写。
+ * ### 1. 顶部语言切换栏（Badam 风格）
+ * 横条上显示 维语 / 中文 / En 三个标签，点击直接切换。
+ * 当前语言的标签高亮蓝色，其他灰色。
  *
- * 现在改为：维语字母先累积到 [composingBuffer]，通过
- * `setComposingText` 一次性发送给系统。系统看到完整的阿拉伯
- * 文本后，会自动处理字母连写（shaping）。
+ * ### 2. 维语连写（composing 模式，已修复，不改动）
+ * 维语字母累积到 [composingBuffer]，通过 setComposingText 显示连写效果。
+ * 空格/回车/切换时 commitText 上屏。
  *
- * 空格/回车/切换语言时，调用 [commitComposing] 把缓冲区
- * 正式上屏（commitText），然后清空缓冲区。
+ * ### 3. 中文拼音输入（新增）
+ * 中文模式下，输入的拼音字母累积到 [pinyinBuffer]。
+ * 调用 [PinyinEngine] 查询候选词，显示在候选词栏。
+ * 用户点击候选词 → commitText 上屏汉字。
  *
- * 退格时，从缓冲区删除最后一个字符，更新 composing 文本。
- *
- * ### 删除键修复
- * 1. 维语 composing 模式下：从缓冲区删最后一个字符
- * 2. 有选中文本时：用 commitText("") 删除选中的文本
- * 3. 普通模式：deleteSurroundingText(1, 0)
- *
- * ### 中文模式
- * 当前原型不含拼音引擎，中文模式直接输出字母。
- * 后续可集成 Rime 引擎实现真正的中文输入。
+ * ### 4. 删除键（已修复）
+ * 维语 composing：从缓冲区删最后字符
+ * 中文拼音：从缓冲区删最后字符
+ * 有选中文本：commitText("") 删除选中
+ * 普通模式：deleteSurroundingText(1, 0)
  */
 @Suppress("DEPRECATION")
 class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
 
     private lateinit var keyboardView: NurKeyboardView
+    private lateinit var langBtnUyghur: TextView
+    private lateinit var langBtnChinese: TextView
+    private lateinit var langBtnEnglish: TextView
+    private lateinit var candidateScroll: HorizontalScrollView
+    private lateinit var candidateContainer: LinearLayout
 
-    /** 维语 composing 缓冲区 — 累积字母，用 setComposingText 显示连写 */
+    /** 维语 composing 缓冲区 */
     private val composingBuffer = StringBuilder()
+
+    /** 中文拼音缓冲区 */
+    private val pinyinBuffer = StringBuilder()
+
+    /** 当前候选词列表 */
+    private var candidates: List<String> = emptyList()
 
     // ============================================================
     // 生命周期
     // ============================================================
 
     override fun onCreateInputView(): View? {
-        keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as NurKeyboardView
+        val container = layoutInflater.inflate(R.layout.input_view_container, null) as View
+
+        keyboardView = container.findViewById(R.id.keyboard)
         keyboardView.setOnKeyboardActionListener(this)
-        return keyboardView
+
+        langBtnUyghur = container.findViewById(R.id.btn_lang_uyghur)
+        langBtnChinese = container.findViewById(R.id.btn_lang_chinese)
+        langBtnEnglish = container.findViewById(R.id.btn_lang_english)
+
+        candidateScroll = container.findViewById(R.id.candidate_scroll)
+        candidateContainer = container.findViewById(R.id.candidate_container)
+
+        // 设置语言切换按钮点击事件
+        langBtnUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
+        langBtnChinese.setOnClickListener { switchToLanguage(NurKeyboardView.Language.CHINESE) }
+        langBtnEnglish.setOnClickListener { switchToLanguage(NurKeyboardView.Language.ENGLISH) }
+
+        updateLanguageBar()
+
+        return container
     }
 
     override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
         super.onStartInput(attribute, restarting)
-        // 切换输入框时，清空缓冲区（系统会自动清除 composing 状态）
         composingBuffer.clear()
+        pinyinBuffer.clear()
+        hideCandidates()
     }
 
     override fun onFinishInput() {
-        // 先提交未完成的 composing 文本
         commitComposing()
+        commitPinyin()
         super.onFinishInput()
     }
 
     // ============================================================
-    // 按键事件处理
+    // 语言切换
+    // ============================================================
+
+    private fun switchToLanguage(lang: NurKeyboardView.Language) {
+        // 先提交当前未完成的内容
+        commitComposing()
+        commitPinyin()
+
+        keyboardView.switchToLanguage(lang)
+        updateLanguageBar()
+    }
+
+    private fun updateLanguageBar() {
+        val activeColor = Color.parseColor("#2563EB")
+        val activeText = Color.WHITE
+        val inactiveBg = Color.parseColor("#F5F5F5")
+        val inactiveText = Color.parseColor("#666666")
+
+        val current = keyboardView.currentLanguage
+
+        langBtnUyghur.setBackgroundColor(if (current == NurKeyboardView.Language.UYGHUR) activeColor else inactiveBg)
+        langBtnUyghur.setTextColor(if (current == NurKeyboardView.Language.UYGHUR) activeText else inactiveText)
+
+        langBtnChinese.setBackgroundColor(if (current == NurKeyboardView.Language.CHINESE) activeColor else inactiveBg)
+        langBtnChinese.setTextColor(if (current == NurKeyboardView.Language.CHINESE) activeText else inactiveText)
+
+        langBtnEnglish.setBackgroundColor(if (current == NurKeyboardView.Language.ENGLISH) activeColor else inactiveBg)
+        langBtnEnglish.setTextColor(if (current == NurKeyboardView.Language.ENGLISH) activeText else inactiveText)
+    }
+
+    // ============================================================
+    // 按键事件
     // ============================================================
 
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic = currentInputConnection ?: return
 
         when (primaryCode) {
-            // 语言切换键
+            // 语言切换键（保留兼容旧布局，现在主用顶部栏）
             NurKeyboardView.KEYCODE_LANGUAGE_SWITCH -> {
-                commitComposing()
-                keyboardView.switchToNextLanguage()
+                switchToLanguage(
+                    when (keyboardView.currentLanguage) {
+                        NurKeyboardView.Language.UYGHUR -> NurKeyboardView.Language.CHINESE
+                        NurKeyboardView.Language.CHINESE -> NurKeyboardView.Language.ENGLISH
+                        NurKeyboardView.Language.ENGLISH -> NurKeyboardView.Language.UYGHUR
+                    }
+                )
             }
 
             // 清空键
             NurKeyboardView.KEYCODE_CLEAR -> {
                 composingBuffer.clear()
+                pinyinBuffer.clear()
+                hideCandidates()
                 ic.deleteSurroundingText(1000, 0)
             }
 
-            // 退格 / 删除键
+            // 退格
             Keyboard.KEYCODE_DELETE -> handleBackspace(ic)
 
-            // 回车 / 完成键
+            // 回车
             Keyboard.KEYCODE_DONE -> handleEnter(ic)
 
-            // Shift 键 — 维语切换到 Shift 层，英文/中文用框架内置 Shift
+            // Shift
             Keyboard.KEYCODE_SHIFT -> {
                 if (keyboardView.currentLanguage == NurKeyboardView.Language.UYGHUR && !keyboardView.isSymbolMode) {
                     commitComposing()
                     keyboardView.toggleUyghurShift()
                 } else {
-                    // 英文/中文模式：用框架内置的大小写切换
                     keyboardView.isShifted = !keyboardView.isShifted
                 }
             }
 
-            // 数字符号切换键（123 / ABC）
+            // 数字符号切换
             NurKeyboardView.KEYCODE_SYMBOL_SWITCH -> {
                 commitComposing()
+                commitPinyin()
                 if (keyboardView.isSymbolMode) {
                     keyboardView.switchBackFromSymbols()
                 } else {
@@ -112,7 +185,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             }
 
             else -> {
-                // 普通字符键（code > 0 表示 ASCII 字符码）
                 if (primaryCode > 0) {
                     val ch = primaryCode.toChar()
                     handleCharacter(ch, ic)
@@ -121,10 +193,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         }
     }
 
-    /**
-     * 处理 keyOutputText 按键 — 维语字母直接输出。
-     * 维语模式下，字母累积到 composingBuffer，通过 setComposingText 显示连写效果。
-     */
     override fun onText(text: CharSequence?) {
         val ic = currentInputConnection ?: return
         val outputText = text?.toString() ?: return
@@ -137,12 +205,15 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
         when (keyboardView.currentLanguage) {
             NurKeyboardView.Language.UYGHUR -> {
-                // 维语模式：累积到 composing 缓冲区
-                // setComposingText 让系统看到完整阿拉伯文本，自动处理字母连写
+                // 维语 composing 模式（已修复的连写逻辑，不改动）
                 composingBuffer.append(outputText)
                 ic.setComposingText(composingBuffer.toString(), 1)
             }
-            NurKeyboardView.Language.CHINESE,
+            NurKeyboardView.Language.CHINESE -> {
+                // 中文模式：维语字母键不应该在中文模式下有 outputText
+                // 如果有就直接输出
+                ic.commitText(outputText, 1)
+            }
             NurKeyboardView.Language.ENGLISH -> {
                 ic.commitText(outputText, 1)
             }
@@ -154,7 +225,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     // ============================================================
 
     private fun handleCharacter(ch: Char, ic: InputConnection) {
-        // 符号模式下，直接输出
         if (keyboardView.isSymbolMode) {
             ic.commitText(ch.toString(), 1)
             return
@@ -163,7 +233,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         when (keyboardView.currentLanguage) {
             NurKeyboardView.Language.UYGHUR -> {
                 if (ch == ' ') {
-                    // 空格：先提交 composing 文本，再输出空格
                     commitComposing()
                     ic.commitText(" ", 1)
                 } else {
@@ -171,7 +240,31 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                     ic.setComposingText(composingBuffer.toString(), 1)
                 }
             }
-            NurKeyboardView.Language.CHINESE,
+            NurKeyboardView.Language.CHINESE -> {
+                // 中文拼音模式
+                if (ch == ' ') {
+                    // 空格：选第一个候选词，或直接输出拼音
+                    if (candidates.isNotEmpty()) {
+                        ic.commitText(candidates[0], 1)
+                        pinyinBuffer.clear()
+                        hideCandidates()
+                    } else if (pinyinBuffer.isNotEmpty()) {
+                        ic.commitText(pinyinBuffer.toString(), 1)
+                        pinyinBuffer.clear()
+                        hideCandidates()
+                    } else {
+                        ic.commitText(" ", 1)
+                    }
+                } else if (ch.isLetter()) {
+                    // 累积拼音
+                    pinyinBuffer.append(ch.lowercaseChar())
+                    updatePinyinCandidates(ic)
+                } else {
+                    // 标点符号等直接输出
+                    commitPinyin()
+                    ic.commitText(ch.toString(), 1)
+                }
+            }
             NurKeyboardView.Language.ENGLISH -> {
                 ic.commitText(ch.toString(), 1)
             }
@@ -179,35 +272,117 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     }
 
     // ============================================================
-    // 退格处理（修复删除功能）
+    // 中文拼音候选词
+    // ============================================================
+
+    private fun updatePinyinCandidates(ic: InputConnection) {
+        val pinyin = pinyinBuffer.toString()
+
+        if (pinyin.isEmpty()) {
+            hideCandidates()
+            return
+        }
+
+        // 查找候选词
+        candidates = PinyinEngine.lookup(pinyin)
+
+        if (candidates.isEmpty()) {
+            // 没有候选词，显示原始拼音
+            ic.setComposingText(pinyin, 1)
+            hideCandidates()
+        } else {
+            // 显示第一个候选词为 composing，其余在候选栏
+            ic.setComposingText(candidates[0], 1)
+            showCandidates()
+        }
+    }
+
+    private fun showCandidates() {
+        candidateContainer.removeAllViews()
+
+        if (candidates.isEmpty()) {
+            hideCandidates()
+            return
+        }
+
+        for ((index, candidate) in candidates.withIndex()) {
+            val tv = TextView(this)
+            tv.text = candidate
+            tv.textSize = 16f
+            tv.setTextColor(Color.parseColor("#333333"))
+            tv.setPadding(24, 0, 24, 0)
+            tv.gravity = Gravity.CENTER_VERTICAL
+            tv.setOnClickListener {
+                val ic = currentInputConnection
+                if (ic != null) {
+                    ic.commitText(candidate, 1)
+                    pinyinBuffer.clear()
+                    hideCandidates()
+                }
+            }
+            candidateContainer.addView(tv)
+
+            // 添加分隔线
+            if (index < candidates.size - 1) {
+                val divider = View(this)
+                divider.layoutParams = LinearLayout.LayoutParams(1, 24).apply {
+                    setMargins(0, 6, 0, 6)
+                }
+                divider.setBackgroundColor(Color.parseColor("#DDDDDD"))
+                candidateContainer.addView(divider)
+            }
+        }
+
+        candidateScroll.visibility = View.VISIBLE
+    }
+
+    private fun hideCandidates() {
+        candidateScroll.visibility = View.GONE
+        candidates = emptyList()
+    }
+
+    // ============================================================
+    // 退格处理
     // ============================================================
 
     private fun handleBackspace(ic: InputConnection) {
-        // 1. 维语 composing 模式：从缓冲区删最后一个字符
+        // 1. 中文拼音模式：从拼音缓冲区删
+        if (keyboardView.currentLanguage == NurKeyboardView.Language.CHINESE
+            && !keyboardView.isSymbolMode
+            && pinyinBuffer.isNotEmpty()
+        ) {
+            pinyinBuffer.deleteCharAt(pinyinBuffer.length - 1)
+            if (pinyinBuffer.isNotEmpty()) {
+                updatePinyinCandidates(ic)
+            } else {
+                ic.setComposingText("", 0)
+                hideCandidates()
+            }
+            return
+        }
+
+        // 2. 维语 composing 模式：从缓冲区删
         if (keyboardView.currentLanguage == NurKeyboardView.Language.UYGHUR
             && !keyboardView.isSymbolMode
             && composingBuffer.isNotEmpty()
         ) {
             composingBuffer.deleteCharAt(composingBuffer.length - 1)
             if (composingBuffer.isNotEmpty()) {
-                // 更新 composing 文本（剩余字母仍然连写）
                 ic.setComposingText(composingBuffer.toString(), 1)
             } else {
-                // 缓冲区空了，清除 composing 状态
                 ic.setComposingText("", 0)
             }
             return
         }
 
-        // 2. 有选中文本时：删除选中的内容
+        // 3. 有选中文本时：删除选中内容
         val selectedText = ic.getSelectedText(0)
         if (selectedText != null && selectedText.isNotEmpty()) {
-            // commitText("") 会替换选中文本为空，即删除
             ic.commitText("", 1)
             return
         }
 
-        // 3. 普通删除：删除光标前一个字符
+        // 4. 普通删除
         ic.deleteSurroundingText(1, 0)
     }
 
@@ -216,8 +391,8 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     // ============================================================
 
     private fun handleEnter(ic: InputConnection) {
-        // 先提交 composing 文本
         commitComposing()
+        commitPinyin()
 
         val editorInfo = currentInputEditorInfo
         if (editorInfo != null) {
@@ -233,7 +408,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                 }
             }
         }
-        // 默认插入换行
         ic.commitText("\n", 1)
     }
 
@@ -241,11 +415,6 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     // 辅助方法
     // ============================================================
 
-    /**
-     * 提交 composing 缓冲区中的文本到编辑器。
-     * 在空格、回车、切换语言、切换符号页时调用。
-     * commitText 会自动清除 composing 状态（下划线消失）。
-     */
     private fun commitComposing() {
         if (composingBuffer.isEmpty()) return
         val ic = currentInputConnection ?: run {
@@ -254,6 +423,22 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         }
         ic.commitText(composingBuffer.toString(), 1)
         composingBuffer.clear()
+    }
+
+    private fun commitPinyin() {
+        if (pinyinBuffer.isEmpty()) return
+        val ic = currentInputConnection ?: run {
+            pinyinBuffer.clear()
+            return
+        }
+        // 如果有候选词，提交第一个；否则提交原始拼音
+        if (candidates.isNotEmpty()) {
+            ic.commitText(candidates[0], 1)
+        } else {
+            ic.commitText(pinyinBuffer.toString(), 1)
+        }
+        pinyinBuffer.clear()
+        hideCandidates()
     }
 
     // ============================================================

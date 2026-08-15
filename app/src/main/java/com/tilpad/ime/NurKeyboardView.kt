@@ -73,6 +73,18 @@ class NurKeyboardView(
     }
 
     /**
+     * 直接切换到指定语言（顶部语言栏用）。
+     */
+    fun switchToLanguage(lang: Language) {
+        if (currentLanguage != lang) {
+            currentLanguage = lang
+            isUyghurShifted = false
+            isSymbolMode = false
+            setKeyboard(keyboards[lang]!!)
+        }
+    }
+
+    /**
      * 维语 Shift 切换：在主键盘和 Shift 层之间来回切换。
      */
     fun toggleUyghurShift() {
