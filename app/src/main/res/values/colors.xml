@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Telegram 主色调 -->
+    <color name="telegram_blue">#2AABEE</color>
+    <color name="telegram_blue_dark">#0088CC</color>
+    <color name="telegram_blue_light">#54A9F0</color>
+
+    <!-- 背景色 -->
+    <color name="bg_main">#F0F2F5</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_header_start">#2AABEE</color>
+    <color name="bg_header_end">#0088CC</color>
+
+    <!-- 文字色 -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#8A8A8E</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_blue">#2AABEE</color>
+
+    <!-- 分割线 -->
+    <color name="divider">#E5E5EA</color>
+
+    <!-- 图标背景色 -->
+    <color name="icon_bg_blue">#3AADEE</color>
+    <color name="icon_bg_green">#4CAF50</color>
+    <color name="icon_bg_orange">#FF9800</color>
+    <color name="icon_bg_purple">#9C27B0</color>
+    <color name="icon_bg_red">#F44336</color>
+    <color name="icon_bg_teal">#009688</color>
+
+    <!-- 开关颜色 -->
+    <color name="switch_track_off">#D1D1D6</color>
+    <color name="switch_track_on">#3AADEE</color>
+</resources>
