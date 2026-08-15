@@ -1,5 +1,7 @@
 package com.tilpad.ime
 
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.inputmethodservice.InputMethodService
@@ -20,12 +22,13 @@ import android.widget.Toast
  * TilPad 输入法服务 v3 — 完整版。
  *
  * 功能：
- * 1. 顶部工具栏（下拉/齿轮/布局/表情/头像/快捷图标/维语/中文/En）
+ * 1. 顶部工具栏（下拉/齿轮/布局/剪贴板/表情/头像/快捷图标/维语/中文/En）
  * 2. 候选词栏（中文拼音）
  * 3. 表情面板（可切换显示）
- * 4. 维语 composing 连写（不改动）
- * 5. 中文拼音输入
- * 6. 删除键修复
+ * 4. 剪贴板面板（自动识别复制内容，快速粘贴历史记录）
+ * 5. 维语 composing 连写（不改动）
+ * 6. 中文拼音输入
+ * 7. 删除键修复
  */
 @Suppress("DEPRECATION")
 class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
@@ -38,9 +41,11 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     private lateinit var candidateContainer: LinearLayout
     private lateinit var panelContainer: View
     private lateinit var emojiGrid: GridView
+    private lateinit var clipboardList: android.widget.ListView
     private lateinit var btnEmoji: View
     private lateinit var btnSettings: View
     private lateinit var btnQuickUyghur: View
+    private lateinit var btnClipboard: View
 
     private val composingBuffer = StringBuilder()
     private val pinyinBuffer = StringBuilder()
@@ -48,6 +53,29 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     /** 表情面板是否显示 */
     private var emojiPanelVisible = false
+
+    /** 剪贴板面板是否显示 */
+    private var clipboardPanelVisible = false
+
+    /** 实时监听系统剪贴板变化 */
+    private val clipboardListener = ClipboardManager.OnPrimaryClipChangedListener {
+        ClipboardHelper.checkClipboard(this)
+        refreshClipboardList()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        // 注册剪贴板监听，用户在任何地方复制文字都能自动识别
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        cm?.addPrimaryClipChangedListener(clipboardListener)
+    }
+
+    override fun onDestroy() {
+        // 注销剪贴板监听
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        cm?.removePrimaryClipChangedListener(clipboardListener)
+        super.onDestroy()
+    }
 
     /** Emoji 表情列表 */
     private val emojiList = listOf(
@@ -85,10 +113,12 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
         panelContainer = container.findViewById(R.id.panel_container)
         emojiGrid = container.findViewById(R.id.emoji_grid)
+        clipboardList = container.findViewById(R.id.clipboard_list)
 
         btnEmoji = container.findViewById(R.id.btn_emoji)
         btnSettings = container.findViewById(R.id.btn_settings)
         btnQuickUyghur = container.findViewById(R.id.btn_quick_uyghur)
+        btnClipboard = container.findViewById(R.id.btn_clipboard)
 
         // 语言切换按钮
         langBtnUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
@@ -108,10 +138,19 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         // 维语快捷图标 — 直接切换到维语
         btnQuickUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
 
+        // 剪贴板按钮 — 切换剪贴板面板
+        btnClipboard.setOnClickListener { toggleClipboardPanel() }
+
         // 设置 emoji grid adapter
         setupEmojiGrid()
 
+        // 设置剪贴板列表
+        setupClipboardList()
+
         updateLanguageBar()
+
+        // 首次加载检查剪贴板
+        ClipboardHelper.checkClipboard(this)
 
         return container
     }
@@ -122,6 +161,10 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         pinyinBuffer.clear()
         hideCandidates()
         hideEmojiPanel()
+        hideClipboardPanel()
+        // 自动检查系统剪贴板，识别用户新复制的文本
+        ClipboardHelper.checkClipboard(this)
+        refreshClipboardList()
     }
 
     override fun onFinishInput() {
@@ -153,6 +196,10 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     private fun showEmojiPanel() {
         emojiPanelVisible = true
+        clipboardPanelVisible = false
+        // 显示表情网格，隐藏剪贴板列表
+        emojiGrid.visibility = View.VISIBLE
+        clipboardList.visibility = View.GONE
         keyboardView.visibility = View.GONE
         panelContainer.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -168,6 +215,81 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     }
 
     // ============================================================
+    // 剪贴板面板
+    // ============================================================
+
+    private var clipboardAdapter: ClipboardAdapter? = null
+
+    /** 设置剪贴板列表适配器 */
+    private fun setupClipboardList() {
+        val items = ClipboardHelper.getHistory().toMutableList()
+        clipboardAdapter = ClipboardAdapter(
+            context = this,
+            items = items,
+            onPaste = { text ->
+                val ic = currentInputConnection
+                if (ic != null) {
+                    ic.commitText(text, 1)
+                    hideClipboardPanel()
+                }
+            },
+            onDelete = { position ->
+                ClipboardHelper.removeHistoryItem(position)
+                refreshClipboardList()
+                if (ClipboardHelper.getHistory().isEmpty()) {
+                    hideClipboardPanel()
+                }
+            }
+        )
+        clipboardList.adapter = clipboardAdapter
+    }
+
+    /** 刷新剪贴板列表数据 */
+    private fun refreshClipboardList() {
+        clipboardAdapter?.refresh(ClipboardHelper.getHistory())
+    }
+
+    /** 切换剪贴板面板显示/隐藏 */
+    private fun toggleClipboardPanel() {
+        if (clipboardPanelVisible) {
+            hideClipboardPanel()
+        } else {
+            showClipboardPanel()
+        }
+    }
+
+    /** 显示剪贴板面板 */
+    private fun showClipboardPanel() {
+        // 先检查剪贴板最新内容
+        ClipboardHelper.checkClipboard(this)
+        refreshClipboardList()
+
+        clipboardPanelVisible = true
+        emojiPanelVisible = false
+        // 显示剪贴板列表，隐藏表情网格
+        clipboardList.visibility = View.VISIBLE
+        emojiGrid.visibility = View.GONE
+        keyboardView.visibility = View.GONE
+        panelContainer.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            240 * resources.displayMetrics.density.toInt()
+        )
+        panelContainer.visibility = View.VISIBLE
+
+        // 如果没有历史记录，提示用户
+        if (ClipboardHelper.getHistory().isEmpty()) {
+            Toast.makeText(this, "暂无剪贴板记录\n复制文字后会自动显示在这里", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** 隐藏剪贴板面板 */
+    private fun hideClipboardPanel() {
+        clipboardPanelVisible = false
+        panelContainer.visibility = View.GONE
+        keyboardView.visibility = View.VISIBLE
+    }
+
+    // ============================================================
     // 语言切换
     // ============================================================
 
@@ -175,6 +297,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         commitComposing()
         commitPinyin()
         hideEmojiPanel()
+        hideClipboardPanel()
         keyboardView.switchToLanguage(lang)
         updateLanguageBar()
     }

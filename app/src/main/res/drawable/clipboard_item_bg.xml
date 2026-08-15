@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  剪贴板列表项背景 — 圆角白底，按压时浅灰。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#F0F0F0" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FAFAFA" />
+            <corners android:radius="8dp" />
+            <stroke android:width="0.5dp" android:color="#EEEEEE" />
+        </shape>
+    </item>
+</selector>

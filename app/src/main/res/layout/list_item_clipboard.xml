@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  剪贴板历史列表项布局。
+  显示复制的文本预览，点击粘贴，长按删除。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="12dp"
+    android:background="@drawable/clipboard_item_bg">
+
+    <!-- 文本预览 -->
+    <TextView
+        android:id="@+id/clip_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textSize="15sp"
+        android:textColor="#333333"
+        android:layout_marginEnd="8dp" />
+
+    <!-- 删除按钮 -->
+    <ImageView
+        android:id="@+id/clip_delete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:padding="4dp"
+        android:contentDescription="删除" />
+
+</LinearLayout>
