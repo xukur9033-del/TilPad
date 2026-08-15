@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Keyboard body -->
+    <group
+        android:scaleX="0.45"
+        android:scaleY="0.45"
+        android:translateX="29.7"
+        android:translateY="29.7">
+
+        <!-- Keyboard background -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M6,8 L104,8 C107.31,8 110,10.69 110,14 L110,90 C110,93.31 107.31,96 104,96 L6,96 C2.69,96 0,93.31 0,90 L0,14 C0,10.69 2.69,8 6,8 Z"/>
+
+        <!-- Key row 1 -->
+        <path android:fillColor="#6366F1" android:pathData="M12,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M28,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M44,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M60,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M76,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M92,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+
+        <!-- Key row 2 -->
+        <path android:fillColor="#6366F1" android:pathData="M20,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M36,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M52,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M68,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+        <path android:fillColor="#6366F1" android:pathData="M84,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
+
+        <!-- Space bar -->
+        <path android:fillColor="#6366F1" android:pathData="M30,60 L80,60 C83.31,60 86,62.69 86,66 L86,78 C86,81.31 83.31,84 80,84 L30,84 C26.69,84 24,81.31 24,78 L24,66 C24,62.69 26.69,60 30,60 Z"/>
+    </group>
+</vector>
