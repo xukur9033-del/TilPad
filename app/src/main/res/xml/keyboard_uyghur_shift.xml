@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  维语键盘 Shift 层 — 补全 11 个缺失字母 + 常用标点。
+  按 Shift 键切换到此层，再按 Shift 返回主键盘。
+
+  Row 1: ڭ ە و ۇ ۈ ى ئا ئە ئې ئۆ
+  Row 2: ئۈ . ، ؟ ! : ; " '
+  Row 3: [⇧] - = + * / \ | ~ [⌫]
+  Row 4: [ABC] [🌐] [space] [↵]
+-->
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="10%p"
+    android:keyHeight="45dp"
+    android:horizontalGap="3dp"
+    android:verticalGap="5dp">
+
+    <!-- Row 1: 缺失字母 -->
+    <Row android:rowEdgeFlags="top">
+        <Key android:codes="0" android:keyLabel="ڭ"  android:keyOutputText="ڭ"  android:keyEdgeFlags="left" />
+        <Key android:codes="0" android:keyLabel="ە"  android:keyOutputText="ە" />
+        <Key android:codes="0" android:keyLabel="و"  android:keyOutputText="و" />
+        <Key android:codes="0" android:keyLabel="ۇ"  android:keyOutputText="ۇ" />
+        <Key android:codes="0" android:keyLabel="ۈ"  android:keyOutputText="ۈ" />
+        <Key android:codes="0" android:keyLabel="ى"  android:keyOutputText="ى" />
+        <Key android:codes="0" android:keyLabel="ئا" android:keyOutputText="ئا" />
+        <Key android:codes="0" android:keyLabel="ئە" android:keyOutputText="ئە" />
+        <Key android:codes="0" android:keyLabel="ئې" android:keyOutputText="ئې" />
+        <Key android:codes="0" android:keyLabel="ئۆ" android:keyOutputText="ئۆ" android:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 2: ئۈ + 常用标点 -->
+    <Row>
+        <Key android:codes="0" android:keyLabel="ئۈ" android:keyOutputText="ئۈ" android:keyEdgeFlags="left" />
+        <Key android:codes="46"  android:keyLabel="." />
+        <Key android:codes="1548" android:keyLabel="،" android:keyOutputText="،" />
+        <Key android:codes="1567" android:keyLabel="؟" android:keyOutputText="؟" />
+        <Key android:codes="33"  android:keyLabel="!" />
+        <Key android:codes="58"  android:keyLabel=":" />
+        <Key android:codes="59"  android:keyLabel=";" />
+        <Key android:codes="34"  android:keyLabel="&quot;" />
+        <Key android:codes="39"  android:keyLabel="'" />
+        <Key android:codes="45"  android:keyLabel="-" android:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 3: [⇧] 符号 [⌫] -->
+    <Row>
+        <Key android:codes="-1"  android:keyLabel="⇧" android:keyWidth="13%p"
+             android:isModifier="true" android:keyEdgeFlags="left" />
+        <Key android:codes="61"  android:keyLabel="="  android:keyWidth="8.5%p" />
+        <Key android:codes="43"  android:keyLabel="+"  android:keyWidth="8.5%p" />
+        <Key android:codes="42"  android:keyLabel="*"  android:keyWidth="8.5%p" />
+        <Key android:codes="47"  android:keyLabel="/"  android:keyWidth="8.5%p" />
+        <Key android:codes="92"  android:keyLabel="\\" android:keyWidth="8.5%p" />
+        <Key android:codes="124" android:keyLabel="|"  android:keyWidth="8.5%p" />
+        <Key android:codes="126" android:keyLabel="~"  android:keyWidth="8.5%p" />
+        <Key android:codes="95"  android:keyLabel="_"  android:keyWidth="8.5%p" />
+        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="13%p"
+             android:isRepeatable="true" android:keyEdgeFlags="right" />
+    </Row>
+
+    <!-- Row 4: [ABC] [🌐] [space] [↵] -->
+    <Row android:rowEdgeFlags="bottom">
+        <Key android:codes="-103" android:keyLabel="ABC" android:keyWidth="15%p"
+             android:keyEdgeFlags="left" />
+        <Key android:codes="-101" android:keyLabel="🌐"  android:keyWidth="15%p" />
+        <Key android:codes="32"   android:keyLabel="ئۇيغۇرچە" android:keyWidth="40%p" />
+        <Key android:codes="-4"   android:keyLabel="↵"  android:keyWidth="15%p"
+             android:isRepeatable="true" android:keyEdgeFlags="right" />
+    </Row>
+
+</Keyboard>
