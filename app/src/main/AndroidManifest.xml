@@ -3,9 +3,24 @@
 
     <application
         android:allowBackup="true"
+        android:icon="@android:drawable/ic_btn_speak_now"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/TilPadTheme">
+
+        <!--
+          设置入口 Activity — 让 App 在桌面有图标。
+          用户点桌面图标后打开此页面，可以跳转到系统输入法设置。
+        -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!--
           输入法服务声明。
