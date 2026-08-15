@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 按键背景 Selector：按下时变灰，默认白色圆角 -->
+<!--
+  按键背景 Selector — 现代风格。
+  浅色背景 + 圆角白色按键 + 按下变蓝灰。
+  参考微信/搜狗输入法风格。
+-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 按下状态 -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="#BDBDBD" />
-            <corners android:radius="5dp" />
+            <solid android:color="#D1E4F5" />
+            <corners android:radius="8dp" />
+            <stroke android:width="0.5dp" android:color="#B0D0E8" />
         </shape>
     </item>
+    <!-- 功能键选中状态 -->
     <item android:state_checkable="true" android:state_checked="true">
         <shape android:shape="rectangle">
-            <solid android:color="#D0D0D0" />
-            <corners android:radius="5dp" />
+            <solid android:color="#C8E0F4" />
+            <corners android:radius="8dp" />
         </shape>
     </item>
+    <!-- 普通按键默认状态 -->
     <item>
         <shape android:shape="rectangle">
             <solid android:color="#FFFFFF" />
-            <corners android:radius="5dp" />
+            <corners android:radius="8dp" />
+            <stroke android:width="0.3dp" android:color="#E0E0E0" />
         </shape>
     </item>
 </selector>

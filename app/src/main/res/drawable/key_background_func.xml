@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  功能键背景 — 用于退格、回车、语言切换等。
+  浅灰背景，与普通按键区分。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#C5C8CC" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#D3D7DB" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</selector>

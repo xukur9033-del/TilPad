@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  英文键盘布局 — 标准 QWERTY + 功能键。
-  英文模式下字符直接上屏，不做转换。
+  英文键盘布局 — 现代风格，QWERTY + 数字行。
+  参考微信/搜狗输入法风格。
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="10%p"
-    android:keyHeight="56dp"
-    android:horizontalGap="1dp"
-    android:verticalGap="1dp">
+    android:keyHeight="48dp"
+    android:horizontalGap="4dp"
+    android:verticalGap="6dp">
+
+    <!-- Row 0: 数字行 -->
+    <Row android:rowEdgeFlags="top">
+        <Key android:codes="49" android:keyLabel="1" android:keyEdgeFlags="left" />
+        <Key android:codes="50" android:keyLabel="2" />
+        <Key android:codes="51" android:keyLabel="3" />
+        <Key android:codes="52" android:keyLabel="4" />
+        <Key android:codes="53" android:keyLabel="5" />
+        <Key android:codes="54" android:keyLabel="6" />
+        <Key android:codes="55" android:keyLabel="7" />
+        <Key android:codes="56" android:keyLabel="8" />
+        <Key android:codes="57" android:keyLabel="9" />
+        <Key android:codes="48" android:keyLabel="0" android:keyEdgeFlags="right" />
+    </Row>
 
     <!-- Row 1: q w e r t y u i o p -->
     <Row>
@@ -23,7 +37,7 @@
         <Key android:codes="112" android:keyLabel="p" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 2: a s d f g h j k l ' -->
+    <!-- Row 2: a s d f g h j k l -->
     <Row>
         <Key android:codes="97"  android:keyLabel="a" android:keyEdgeFlags="left" />
         <Key android:codes="115" android:keyLabel="s" />
@@ -37,27 +51,28 @@
         <Key android:codes="39"  android:keyLabel="'" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 3: [清空] z x c v b n m [退格] -->
+    <!-- Row 3: [⇧] z x c v b n m [⌫] -->
     <Row>
-        <Key android:codes="-102" android:keyLabel="CLR" android:keyWidth="15%p"
-             android:keyEdgeFlags="left" />
-        <Key android:codes="122" android:keyLabel="z" android:keyWidth="10%p" />
-        <Key android:codes="120" android:keyLabel="x" android:keyWidth="10%p" />
-        <Key android:codes="99"  android:keyLabel="c" android:keyWidth="10%p" />
-        <Key android:codes="118" android:keyLabel="v" android:keyWidth="10%p" />
-        <Key android:codes="98"  android:keyLabel="b" android:keyWidth="10%p" />
-        <Key android:codes="110" android:keyLabel="n" android:keyWidth="10%p" />
-        <Key android:codes="109" android:keyLabel="m" android:keyWidth="10%p" />
-        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="15%p"
+        <Key android:codes="-1"  android:keyLabel="⇧" android:keyWidth="14%p"
+             android:isModifier="true" android:keyEdgeFlags="left" />
+        <Key android:codes="122" android:keyLabel="z" android:keyWidth="8.4%p" />
+        <Key android:codes="120" android:keyLabel="x" android:keyWidth="8.4%p" />
+        <Key android:codes="99"  android:keyLabel="c" android:keyWidth="8.4%p" />
+        <Key android:codes="118" android:keyLabel="v" android:keyWidth="8.4%p" />
+        <Key android:codes="98"  android:keyLabel="b" android:keyWidth="8.4%p" />
+        <Key android:codes="110" android:keyLabel="n" android:keyWidth="8.4%p" />
+        <Key android:codes="109" android:keyLabel="m" android:keyWidth="8.4%p" />
+        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="18.4%p"
              android:isRepeatable="true" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 4: [语言切换] [空格] [回车] -->
+    <!-- Row 4: [🌐] [123] [space] [↵] -->
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="-101" android:keyLabel="🌐" android:keyWidth="15%p"
              android:keyEdgeFlags="left" />
-        <Key android:codes="32" android:keyLabel="English" android:keyWidth="55%p" />
-        <Key android:codes="-4"  android:keyLabel="↵" android:keyWidth="30%p"
+        <Key android:codes="-102" android:keyLabel="符" android:keyWidth="15%p" />
+        <Key android:codes="32" android:keyLabel="English" android:keyWidth="40%p" />
+        <Key android:codes="-4"  android:keyLabel="↵" android:keyWidth="15%p"
              android:keyEdgeFlags="right" />
     </Row>
 
