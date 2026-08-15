@@ -29,7 +29,7 @@
             android:id="@+id/btn_dropdown"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@android:drawable/arrow_down_badge"
+            android:src="@android:drawable/ic_menu_more"
             android:padding="6dp"
             android:contentDescription="菜单" />
 
