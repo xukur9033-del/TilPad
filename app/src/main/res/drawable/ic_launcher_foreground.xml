@@ -5,34 +5,16 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Keyboard body -->
+    <!-- Uyghur letter ئۇ centered in icon -->
     <group
-        android:scaleX="0.45"
-        android:scaleY="0.45"
-        android:translateX="29.7"
-        android:translateY="29.7">
+        android:scaleX="1.0"
+        android:scaleY="1.0"
+        android:translateX="0"
+        android:translateY="0">
 
-        <!-- Keyboard background -->
+        <!-- Large white Uyghur letter ئۇ -->
         <path
             android:fillColor="#FFFFFF"
-            android:pathData="M6,8 L104,8 C107.31,8 110,10.69 110,14 L110,90 C110,93.31 107.31,96 104,96 L6,96 C2.69,96 0,93.31 0,90 L0,14 C0,10.69 2.69,8 6,8 Z"/>
-
-        <!-- Key row 1 -->
-        <path android:fillColor="#6366F1" android:pathData="M12,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M28,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M44,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M60,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M76,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M92,18 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-
-        <!-- Key row 2 -->
-        <path android:fillColor="#6366F1" android:pathData="M20,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M36,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M52,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M68,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-        <path android:fillColor="#6366F1" android:pathData="M84,36 m0,4 a4,4 0 1 0 8,0 a4,4 0 1 0 -8,0"/>
-
-        <!-- Space bar -->
-        <path android:fillColor="#6366F1" android:pathData="M30,60 L80,60 C83.31,60 86,62.69 86,66 L86,78 C86,81.31 83.31,84 80,84 L30,84 C26.69,84 24,81.31 24,78 L24,66 C24,62.69 26.69,60 30,60 Z"/>
+            android:pathData="M54,28 C50,28 47,31 47,35 L47,38 C47,42 50,45 54,45 C58,45 61,42 61,38 L61,35 C61,31 58,28 54,28 Z M47,50 L47,72 C47,76 50,79 54,79 C58,79 61,76 61,72 L61,50 C61,46 58,43 54,43 C50,43 47,46 47,50 Z M42,72 L42,50 C42,46 39,43 35,43 C31,43 28,46 28,50 L28,72 C28,76 31,79 35,79 C39,79 42,76 42,72 Z M66,72 L66,50 C66,46 69,43 73,43 C77,43 80,46 80,50 L80,72 C80,76 77,79 73,79 C69,79 66,76 66,72 Z"/>
     </group>
 </vector>
