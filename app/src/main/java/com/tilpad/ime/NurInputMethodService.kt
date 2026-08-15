@@ -71,6 +71,15 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             // Shift 键
             Keyboard.KEYCODE_SHIFT -> { /* no-op */ }
 
+            // 数字符号切换键（123 / ABC）
+            NurKeyboardView.KEYCODE_SYMBOL_SWITCH -> {
+                if (keyboardView.isSymbolMode) {
+                    keyboardView.switchBackFromSymbols()
+                } else {
+                    keyboardView.switchToSymbols()
+                }
+            }
+
             else -> {
                 // 普通字符键（code > 0 表示 ASCII 字符码）
                 if (primaryCode > 0) {

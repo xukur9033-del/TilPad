@@ -78,6 +78,34 @@ class NurKeyboardView(
         }
     }
 
+    // ============================================================
+    // 符号键盘切换（新增功能，不影响原有语言切换逻辑）
+    // ============================================================
+
+    /** 数字符号键盘实例 */
+    private val symbolsKeyboard: Keyboard = Keyboard(context, R.xml.keyboard_symbols)
+
+    /** 当前是否在符号/数字模式 */
+    var isSymbolMode: Boolean = false
+        private set
+
+    /**
+     * 切换到数字符号键盘。
+     * 记住切换前的语言，以便返回时恢复。
+     */
+    fun switchToSymbols() {
+        isSymbolMode = true
+        setKeyboard(symbolsKeyboard)
+    }
+
+    /**
+     * 从数字符号键盘返回到当前语言的字母键盘。
+     */
+    fun switchBackFromSymbols() {
+        isSymbolMode = false
+        setKeyboard(keyboards[currentLanguage]!!)
+    }
+
     companion object {
         /**
          * 语言切换键的自定义 keyCode。
@@ -92,5 +120,11 @@ class NurKeyboardView(
          * 用于一键清除正在编辑中的未提交文本。
          */
         const val KEYCODE_CLEAR = -102
+
+        /**
+         * 数字符号键盘切换键的自定义 keyCode。
+         * 按下后在字母键盘和数字符号键盘之间来回切换。
+         */
+        const val KEYCODE_SYMBOL_SWITCH = -103
     }
 }
