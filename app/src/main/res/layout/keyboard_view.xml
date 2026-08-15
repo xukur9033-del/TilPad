@@ -3,6 +3,7 @@
   输入法键盘视图布局。
   根元素为自定义的 NurKeyboardView（继承 KeyboardView）。
   KeyboardView 的框架属性（android:keyBackground 等）在此设置。
+  keyTextSize 增大到 24sp 以便维文阿拉伯字母清晰可读。
 -->
 <com.tilpad.ime.NurKeyboardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,7 +14,7 @@
     android:background="#1B1B1B"
     android:keyBackground="@drawable/key_background"
     android:keyTextColor="#333333"
-    android:keyTextSize="22sp"
+    android:keyTextSize="24sp"
     android:labelTextSize="14sp"
     android:keyPreviewLayout="@layout/key_preview"
     android:keyPreviewOffset="2dp"

@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  维语键盘布局 — 拉丁字母 QWERTY + 功能键。
-  用户输入拉丁维语(ULY)，Service 实时转换为阿拉伯字母维语(UAY)上屏。
-  包含 ö 键以支持 ULY 特殊元音。
+  维语键盘布局 — 直接显示维文阿拉伯字母，直接输出。
+
+  键盘上每个按键显示维文字母，按下后直接输出该字母，无需转换。
+  包含全部 32 个维文字母 + 常用 hamza+元音 组合。
+
+  布局参考标准维语键盘 (Unicode CLDR ug-t-k0)：
+  Row 1: پ چ ې ر ت ي ئۇ ئى ئو ۆ
+  Row 2: ا س د ف گ ھ ج ك ل خ
+  Row 3: [CLR] ز ش غ ۋ ب ن م ق ژ [⌫]
+  Row 4: [🌐] ئ ۇ ۈ [space] ە ى و [↵]
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="10%p"
@@ -10,55 +17,63 @@
     android:horizontalGap="1dp"
     android:verticalGap="1dp">
 
-    <!-- Row 1: q w e r t y u i o p -->
+    <!-- Row 1: پ چ ې ر ت ي ئۇ ئى ئو ۆ -->
     <Row>
-        <Key android:codes="113" android:keyLabel="q" android:keyEdgeFlags="left" />
-        <Key android:codes="119" android:keyLabel="w" />
-        <Key android:codes="101" android:keyLabel="e" />
-        <Key android:codes="114" android:keyLabel="r" />
-        <Key android:codes="116" android:keyLabel="t" />
-        <Key android:codes="121" android:keyLabel="y" />
-        <Key android:codes="117" android:keyLabel="u" />
-        <Key android:codes="105" android:keyLabel="i" />
-        <Key android:codes="111" android:keyLabel="o" />
-        <Key android:codes="112" android:keyLabel="p" android:keyEdgeFlags="right" />
+        <Key android:codes="0" android:keyLabel="پ" android:keyOutputText="پ" android:keyEdgeFlags="left" />
+        <Key android:codes="0" android:keyLabel="چ" android:keyOutputText="چ" />
+        <Key android:codes="0" android:keyLabel="ې" android:keyOutputText="ې" />
+        <Key android:codes="0" android:keyLabel="ر" android:keyOutputText="ر" />
+        <Key android:codes="0" android:keyLabel="ت" android:keyOutputText="ت" />
+        <Key android:codes="0" android:keyLabel="ي" android:keyOutputText="ي" />
+        <Key android:codes="0" android:keyLabel="ئۇ" android:keyOutputText="ئۇ" />
+        <Key android:codes="0" android:keyLabel="ئى" android:keyOutputText="ئى" />
+        <Key android:codes="0" android:keyLabel="ئو" android:keyOutputText="ئو" />
+        <Key android:codes="0" android:keyLabel="ۆ" android:keyOutputText="ۆ" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 2: a s d f g h j k l ö -->
+    <!-- Row 2: ا س د ف گ ھ ج ك ل خ -->
     <Row>
-        <Key android:codes="97"  android:keyLabel="a" android:keyEdgeFlags="left" />
-        <Key android:codes="115" android:keyLabel="s" />
-        <Key android:codes="100" android:keyLabel="d" />
-        <Key android:codes="102" android:keyLabel="f" />
-        <Key android:codes="103" android:keyLabel="g" />
-        <Key android:codes="104" android:keyLabel="h" />
-        <Key android:codes="106" android:keyLabel="j" />
-        <Key android:codes="107" android:keyLabel="k" />
-        <Key android:codes="108" android:keyLabel="l" />
-        <Key android:codes="246" android:keyLabel="ö" android:keyEdgeFlags="right" />
+        <Key android:codes="0" android:keyLabel="ا" android:keyOutputText="ا" android:keyEdgeFlags="left" />
+        <Key android:codes="0" android:keyLabel="س" android:keyOutputText="س" />
+        <Key android:codes="0" android:keyLabel="د" android:keyOutputText="د" />
+        <Key android:codes="0" android:keyLabel="ف" android:keyOutputText="ف" />
+        <Key android:codes="0" android:keyLabel="گ" android:keyOutputText="گ" />
+        <Key android:codes="0" android:keyLabel="ھ" android:keyOutputText="ھ" />
+        <Key android:codes="0" android:keyLabel="ج" android:keyOutputText="ج" />
+        <Key android:codes="0" android:keyLabel="ك" android:keyOutputText="ك" />
+        <Key android:codes="0" android:keyLabel="ل" android:keyOutputText="ل" />
+        <Key android:codes="0" android:keyLabel="خ" android:keyOutputText="خ" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 3: [清空] z x c v b n m [退格] -->
+    <!-- Row 3: [CLR] ز ش غ ۋ ب ن م ق ژ [⌫] -->
     <Row>
-        <Key android:codes="-102" android:keyLabel="CLR" android:keyWidth="15%p"
+        <Key android:codes="-102" android:keyLabel="CLR" android:keyWidth="14%p"
              android:keyEdgeFlags="left" />
-        <Key android:codes="122" android:keyLabel="z" android:keyWidth="10%p" />
-        <Key android:codes="120" android:keyLabel="x" android:keyWidth="10%p" />
-        <Key android:codes="99"  android:keyLabel="c" android:keyWidth="10%p" />
-        <Key android:codes="118" android:keyLabel="v" android:keyWidth="10%p" />
-        <Key android:codes="98"  android:keyLabel="b" android:keyWidth="10%p" />
-        <Key android:codes="110" android:keyLabel="n" android:keyWidth="10%p" />
-        <Key android:codes="109" android:keyLabel="m" android:keyWidth="10%p" />
-        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="15%p"
+        <Key android:codes="0" android:keyLabel="ز" android:keyOutputText="ز" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ش" android:keyOutputText="ش" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="غ" android:keyOutputText="غ" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ۋ" android:keyOutputText="ۋ" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ب" android:keyOutputText="ب" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ن" android:keyOutputText="ن" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="م" android:keyOutputText="م" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ق" android:keyOutputText="ق" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ژ" android:keyOutputText="ژ" android:keyWidth="8%p" />
+        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="14%p"
              android:isRepeatable="true" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 4: [语言切换] [空格] [回车] -->
+    <!-- Row 4: [🌐] ئ ۇ ۈ [space] ە ى و [↵] -->
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="-101" android:keyLabel="🌐" android:keyWidth="15%p"
+        <Key android:codes="-101" android:keyLabel="🌐" android:keyWidth="14%p"
              android:keyEdgeFlags="left" />
-        <Key android:codes="32" android:keyLabel="Uyghur" android:keyWidth="55%p" />
-        <Key android:codes="-4"  android:keyLabel="↵" android:keyWidth="30%p"
+        <Key android:codes="0" android:keyLabel="ئ" android:keyOutputText="ئ" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ۇ" android:keyOutputText="ۇ" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ۈ" android:keyOutputText="ۈ" android:keyWidth="8%p" />
+        <Key android:codes="32" android:keyLabel="ئۇيغۇرچە" android:keyWidth="24%p" />
+        <Key android:codes="0" android:keyLabel="ە" android:keyOutputText="ە" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="ى" android:keyOutputText="ى" android:keyWidth="8%p" />
+        <Key android:codes="0" android:keyLabel="و" android:keyOutputText="و" android:keyWidth="8%p" />
+        <Key android:codes="-4"  android:keyLabel="↵" android:keyWidth="14%p"
              android:keyEdgeFlags="right" />
     </Row>
 
