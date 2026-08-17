@@ -218,6 +218,7 @@ object PinyinEngine {
         "mou" to listOf("某", "谋", "牟", "眸"),
         "mu" to listOf("木", "目", "母", "幕", "墓", "幕", "暮", "慕", "牟", "牧", "穆", "姆", "拇"),
         "na" to listOf("那", "拿", "哪", "钠", "呐", "娜", "捺"),
+        "n" to listOf("那", "哪", "年", "您", "女", "弄", "能", "呢", "难", "内", "南", "脑", "鸟", "念", "娘", "农", "奴", "暖", "挪"),
         "nai" to listOf("乃", "奶", "耐", "奈", "奶", "艿"),
         "nan" to listOf("南", "男", "难", "楠", "喃", "腩"),
         "nang" to listOf("囊", "囔"),
@@ -504,11 +505,449 @@ object PinyinEngine {
         "chiguo" to listOf("吃过"),
         "heguo" to listOf("喝过"),
         "maiguo" to listOf("买过"),
-        "quguo" to listOf("去过")
+        "quguo" to listOf("去过"),
+
+        // === 常用动词 ===
+        "kaishi" to listOf("开始"),
+        "jixu" to listOf("继续"),
+        "wancheng" to listOf("完成"),
+        "faxian" to listOf("发现"),
+        "jueding" to listOf("决定"),
+        "xuyao" to listOf("需要"),
+        "gaosu" to listOf("告诉"),
+        "huida" to listOf("回答"),
+        "bangzhu" to listOf("帮助"),
+        "zhaogu" to listOf("照顾"),
+        "guanxin" to listOf("关心"),
+        "yuanliang" to listOf("原谅"),
+        "baorong" to listOf("包容"),
+        "jieshao" to listOf("介绍"),
+        "jieshi" to listOf("解释"),
+        "shuoming" to listOf("说明"),
+        "chengren" to listOf("承认"),
+        "fouren" to listOf("否认"),
+        "xuanze" to listOf("选择"),
+        "tiaoxuan" to listOf("挑选"),
+        "zhanshi" to listOf("展示"),
+        "biaoda" to listOf("表达"),
+        "biaoshi" to listOf("表示"),
+        "biaoxian" to listOf("表现"),
+        "sikao" to listOf("思考"),
+        "kaolv" to listOf("考虑"),
+        "chuli" to listOf("处理"),
+        "jiejue" to listOf("解决"),
+        "banfa" to listOf("办法"),
+        "chansheng" to listOf("产生"),
+        "fasheng" to listOf("发生"),
+        "jingli" to listOf("经历"),
+        "jingyan" to listOf("经验"),
+        "taolun" to listOf("讨论"),
+        "jiaoliu" to listOf("交流"),
+        "goutong" to listOf("沟通"),
+        "pingjia" to listOf("评价"),
+        "jianyi" to listOf("建议"),
+
+        // === 常用名词 ===
+        "shihou" to listOf("时候"),
+        "difang" to listOf("地方"),
+        "wenti" to listOf("问题"),
+        "shiqing" to listOf("事情"),
+        "shijie" to listOf("世界"),
+        "guojia" to listOf("国家"),
+        "shehui" to listOf("社会"),
+        "dianhua" to listOf("电话"),
+        "diannao" to listOf("电脑"),
+        "shouji" to listOf("手机"),
+        "wangluo" to listOf("网络"),
+        "xinxi" to listOf("信息"),
+        "shuju" to listOf("数据"),
+        "daan" to listOf("答案"),
+        "jieguo" to listOf("结果"),
+        "yuanyin" to listOf("原因"),
+        "guocheng" to listOf("过程"),
+        "fangfa" to listOf("方法"),
+        "fangshi" to listOf("方式"),
+        "fangxiang" to listOf("方向"),
+        "weizhi" to listOf("位置"),
+        "didian" to listOf("地点"),
+        "kongjian" to listOf("空间"),
+        "fanwei" to listOf("范围"),
+        "yuyan" to listOf("语言"),
+        "yufa" to listOf("语法"),
+        "ciyu" to listOf("词语"),
+        "juzi" to listOf("句子"),
+        "wenzhang" to listOf("文章"),
+        "xinwen" to listOf("新闻"),
+        "xiaoxi" to listOf("消息"),
+        "tongzhi" to listOf("通知"),
+        "gonggao" to listOf("公告"),
+        "guanggao" to listOf("广告"),
+        "biaoqing" to listOf("表情"),
+        "qinggan" to listOf("情感"),
+        "qingxu" to listOf("情绪"),
+        "xinqing" to listOf("心情"),
+        "xinli" to listOf("心理"),
+        "sixiang" to listOf("思想"),
+        "xingge" to listOf("性格"),
+        "nianling" to listOf("年龄"),
+        "shengao" to listOf("身高"),
+        "tizhong" to listOf("体重"),
+
+        // === 常用形容词 ===
+        "kuaile" to listOf("快乐"),
+        "xingfu" to listOf("幸福"),
+        "meili" to listOf("美丽"),
+        "congming" to listOf("聪明"),
+        "qinfen" to listOf("勤奋"),
+        "nuli" to listOf("努力"),
+        "youxiu" to listOf("优秀"),
+        "weida" to listOf("伟大"),
+        "jiandan" to listOf("简单"),
+        "fuza" to listOf("复杂"),
+        "zhenshi" to listOf("真实"),
+        "shiji" to listOf("实际"),
+        "jianjie" to listOf("简介"),
+        "xiangxi" to listOf("详细"),
+        "pingfan" to listOf("平凡"),
+        "pingjing" to listOf("平静"),
+        "anjing" to listOf("安静"),
+        "putong" to listOf("普通"),
+        "tebie" to listOf("特别"),
+        "zhengchang" to listOf("正常"),
+        "jiankang" to listOf("健康"),
+        "weixian" to listOf("危险"),
+        "anquan" to listOf("安全"),
+        "yonggan" to listOf("勇敢"),
+        "pianyi" to listOf("便宜"),
+        "rongyi" to listOf("容易"),
+        "kunnan" to listOf("困难"),
+
+        // === 常用表达 ===
+        "meishenme" to listOf("没什么"),
+        "meiyou" to listOf("没有"),
+
+        // === 时间词 ===
+        "jintian" to listOf("今天"),
+        "mingtian" to listOf("明天"),
+        "zuotian" to listOf("昨天"),
+        "xianzai" to listOf("现在"),
+        "zaoshang" to listOf("早上"),
+        "wanshang" to listOf("晚上"),
+        "zhongwu" to listOf("中午"),
+        "xiawu" to listOf("下午"),
+        "shangwu" to listOf("上午"),
+        "zhiqian" to listOf("之前"),
+        "zhihou" to listOf("之后"),
+        "zhongjian" to listOf("中间"),
+        "mashang" to listOf("马上"),
+        "like" to listOf("立刻"),
+        "turan" to listOf("突然"),
+        "huran" to listOf("忽然"),
+        "zhongyu" to listOf("终于"),
+        "zuihou" to listOf("最后"),
+        "shouxian" to listOf("首先"),
+        "qici" to listOf("其次"),
+        "ranhou" to listOf("然后"),
+        "yijing" to listOf("已经"),
+        "zhengzai" to listOf("正在"),
+        "gangcai" to listOf("刚才"),
+        "yizhi" to listOf("一直"),
+        "jingchang" to listOf("经常"),
+        "changchang" to listOf("常常"),
+        "tongchang" to listOf("通常"),
+        "youshi" to listOf("有时"),
+        "ouer" to listOf("偶尔"),
+        "yongyuan" to listOf("永远"),
+        "zanshi" to listOf("暂时"),
+        "changqi" to listOf("长期"),
+        "duanqi" to listOf("短期"),
+        "qijian" to listOf("期间"),
+
+        // === 人物 ===
+        "tongxue" to listOf("同学"),
+        "jiaren" to listOf("家人"),
+        "fumu" to listOf("父母"),
+        "xiongdi" to listOf("兄弟"),
+        "jiemei" to listOf("姐妹"),
+        "haizi" to listOf("孩子"),
+        "xiansheng" to listOf("先生"),
+        "nvshi" to listOf("女士"),
+        "xiaojie" to listOf("小姐"),
+        "taitai" to listOf("太太"),
+        "xiaohai" to listOf("小孩"),
+        "qingnian" to listOf("青年"),
+        "shaonian" to listOf("少年"),
+        "ertong" to listOf("儿童"),
+        "laoren" to listOf("老人"),
+        "jiaoshi" to listOf("教师"),
+        "jiaoshou" to listOf("教授"),
+        "zuojia" to listOf("作家"),
+        "huajia" to listOf("画家"),
+        "yanyuan" to listOf("演员"),
+        "geshou" to listOf("歌手"),
+        "daoyan" to listOf("导演"),
+        "jingcha" to listOf("警察"),
+        "junren" to listOf("军人"),
+        "yisheng" to listOf("医生"),
+        "hushi" to listOf("护士"),
+        "lushi" to listOf("律师"),
+        "shangren" to listOf("商人"),
+        "nongmin" to listOf("农民"),
+        "gongren" to listOf("工人"),
+
+        // === 自然 ===
+        "tianqi" to listOf("天气"),
+        "taiyang" to listOf("太阳"),
+        "yueliang" to listOf("月亮"),
+        "xingxing" to listOf("星星"),
+        "huaduo" to listOf("花朵"),
+        "shumu" to listOf("树木"),
+        "heliu" to listOf("河流"),
+        "shanchuan" to listOf("山川"),
+        "haiyang" to listOf("海洋"),
+
+        // === 情绪 ===
+        "kaixin" to listOf("开心"),
+        "nanguo" to listOf("难过"),
+        "shengqi" to listOf("生气"),
+        "haipa" to listOf("害怕"),
+        "jinzhang" to listOf("紧张"),
+        "jidong" to listOf("激动"),
+        "gandong" to listOf("感动"),
+        "jingya" to listOf("惊讶"),
+        "yongqi" to listOf("勇气"),
+
+        // === 疑问词 ===
+        "shenme" to listOf("什么"),
+        "nali" to listOf("哪里"),
+        "nage" to listOf("哪个"),
+        "duoshao" to listOf("多少"),
+        "jige" to listOf("几个"),
+        "shuide" to listOf("谁的"),
+
+        // === 连词 ===
+        "erqie" to listOf("而且"),
+        "huozhe" to listOf("或者"),
+        "haishi" to listOf("还是"),
+        "budan" to listOf("不但"),
+
+        // === 助动词/副词 ===
+        "keyi" to listOf("可以"),
+        "yinggai" to listOf("应该"),
+        "bixu" to listOf("必须"),
+        "keneng" to listOf("可能"),
+        "yexu" to listOf("也许"),
+        "dagai" to listOf("大概"),
+        "dangran" to listOf("当然"),
+        "queshi" to listOf("确实"),
+        "haoxiang" to listOf("好像"),
+        "sihu" to listOf("似乎"),
+
+        // === 国家/地区/语言 ===
+        "meiguo" to listOf("美国"),
+        "riben" to listOf("日本"),
+        "hanguo" to listOf("韩国"),
+        "ouzhou" to listOf("欧洲"),
+        "yazhou" to listOf("亚洲"),
+        "yingyu" to listOf("英语"),
+        "zhongwen" to listOf("中文"),
+        "wenhua" to listOf("文化"),
+        "guoji" to listOf("国际"),
+        "guonei" to listOf("国内"),
+        "guowai" to listOf("国外"),
+
+        // === 学科/领域 ===
+        "jingji" to listOf("经济"),
+        "keji" to listOf("科技"),
+        "jiaoyu" to listOf("教育"),
+        "yishu" to listOf("艺术"),
+        "yinyue" to listOf("音乐"),
+        "dianying" to listOf("电影"),
+        "dianshi" to listOf("电视"),
+        "xiaoshuo" to listOf("小说"),
+        "baozhi" to listOf("报纸"),
+        "zazhi" to listOf("杂志"),
+        "xueshu" to listOf("学术"),
+        "kexue" to listOf("科学"),
+        "zhexue" to listOf("哲学"),
+        "wuli" to listOf("物理"),
+        "huaxue" to listOf("化学"),
+        "shuxue" to listOf("数学"),
+        "lishi" to listOf("历史"),
+        "dili" to listOf("地理"),
+        "shengwu" to listOf("生物"),
+        "zhengzhi" to listOf("政治"),
+
+        // === 场所/建筑 ===
+        "xuexiao" to listOf("学校"),
+        "yiyuan" to listOf("医院"),
+        "yinhang" to listOf("银行"),
+        "shangdian" to listOf("商店"),
+        "chaoshi" to listOf("超市"),
+        "fandian" to listOf("饭店"),
+        "jiudian" to listOf("酒店"),
+        "gongyuan" to listOf("公园"),
+        "tushuguan" to listOf("图书馆"),
+        "bowuguan" to listOf("博物馆"),
+        "dizhi" to listOf("地址"),
+
+        // === 交通 ===
+        "feiji" to listOf("飞机"),
+        "huoche" to listOf("火车"),
+        "qiche" to listOf("汽车"),
+        "ditie" to listOf("地铁"),
+        "gongjiaoche" to listOf("公交车"),
+        "zixingche" to listOf("自行车"),
+        "jiaotong" to listOf("交通"),
+        "tongxun" to listOf("通讯"),
+
+        // === 运动/比赛 ===
+        "yundong" to listOf("运动"),
+        "zuqiu" to listOf("足球"),
+        "lanqiu" to listOf("篮球"),
+        "paiqiu" to listOf("排球"),
+        "wangqiu" to listOf("网球"),
+        "youyong" to listOf("游泳"),
+        "bisai" to listOf("比赛"),
+        "shengli" to listOf("胜利"),
+        "shibai" to listOf("失败"),
+        "chengji" to listOf("成绩"),
+
+        // === 社会/政治/经济 ===
+        "zhengfu" to listOf("政府"),
+        "zhengce" to listOf("政策"),
+        "falv" to listOf("法律"),
+        "minzu" to listOf("民族"),
+        "heping" to listOf("和平"),
+        "zhanzheng" to listOf("战争"),
+        "fazhan" to listOf("发展"),
+        "jinbu" to listOf("进步"),
+        "gaige" to listOf("改革"),
+        "kaifang" to listOf("开放"),
+        "chuangxin" to listOf("创新"),
+        "yanjiu" to listOf("研究"),
+        "jihua" to listOf("计划"),
+        "guanli" to listOf("管理"),
+        "zuzhi" to listOf("组织"),
+        "tuandui" to listOf("团队"),
+        "hezuo" to listOf("合作"),
+        "jingzheng" to listOf("竞争"),
+        "shengchan" to listOf("生产"),
+        "xiaofei" to listOf("消费"),
+        "jiage" to listOf("价格"),
+        "shichang" to listOf("市场"),
+        "jinrong" to listOf("金融"),
+        "gupiao" to listOf("股票"),
+        "touzi" to listOf("投资"),
+        "chengshi" to listOf("城市", "诚实"),
+        "nongcun" to listOf("农村"),
+
+        // === 环境/资源 ===
+        "huanjing" to listOf("环境"),
+        "baohu" to listOf("保护"),
+        "wuran" to listOf("污染"),
+        "ziyuan" to listOf("资源"),
+        "nengyuan" to listOf("能源"),
+        "dianli" to listOf("电力"),
+
+        // === 计算机/技术 ===
+        "jisuanji" to listOf("计算机"),
+        "ruanjian" to listOf("软件"),
+        "yingjian" to listOf("硬件"),
+        "xitong" to listOf("系统"),
+        "chengxu" to listOf("程序"),
+        "sheji" to listOf("设计"),
+        "kaifa" to listOf("开发"),
+        "ceshi" to listOf("测试"),
+        "weihu" to listOf("维护"),
+        "yunying" to listOf("运营"),
+        "fuwu" to listOf("服务"),
+        "chanpin" to listOf("产品"),
+        "kehu" to listOf("客户"),
+        "yonghu" to listOf("用户"),
+        "tiyan" to listOf("体验"),
+        "wangzhan" to listOf("网站"),
+        "wangzhi" to listOf("网址"),
+        "youjian" to listOf("邮件"),
+        "youxiang" to listOf("邮箱"),
+
+        // === 学习相关 ===
+        "kecheng" to listOf("课程"),
+        "ketang" to listOf("课堂"),
+        "keben" to listOf("课本"),
+        "jiangke" to listOf("讲课"),
+        "jiangzuo" to listOf("讲座"),
+        "jiangshi" to listOf("讲师"),
+        "jiaolian" to listOf("教练"),
+        "jiaoxue" to listOf("教学"),
+
+        // === 方位 ===
+        "pangbian" to listOf("旁边"),
+        "fujin" to listOf("附近"),
+        "zhouwei" to listOf("周围"),
+        "waimian" to listOf("外面"),
+        "limian" to listOf("里面"),
+        "shangmian" to listOf("上面"),
+        "xiamian" to listOf("下面"),
+        "qianmian" to listOf("前面"),
+        "houmian" to listOf("后面"),
+        "zuobian" to listOf("左边"),
+        "youbian" to listOf("右边"),
+        "dongbian" to listOf("东边"),
+        "xibian" to listOf("西边"),
+        "nanbian" to listOf("南边"),
+        "beibian" to listOf("北边"),
+
+        // === 数量词 ===
+        "yixie" to listOf("一些"),
+        "henduo" to listOf("很多"),
+        "xuduo" to listOf("许多"),
+        "yiqie" to listOf("一切"),
+        "quanbu" to listOf("全部"),
+        "bufen" to listOf("部分"),
+        "yiban" to listOf("一般"),
+        "naixin" to listOf("耐心"),
+        "xinxin" to listOf("信心")
     )
 
     /** 合法拼音音节集合（用于拆分） */
     private val validSyllables: Set<String> = charMap.keys
+
+    /**
+     * 高频字频率表（数值越小越常用）。
+     * 用于对单字候选按使用频率排序，使最常用的字排在前面，贴近主流输入法体验。
+     */
+    private val charFrequency: Map<String, Int> = mapOf(
+        "的" to 1, "是" to 2, "了" to 3, "在" to 4, "有" to 5,
+        "和" to 6, "不" to 7, "这" to 8, "我" to 9, "你" to 10,
+        "他" to 11, "她" to 12, "们" to 13, "个" to 14, "上" to 15,
+        "下" to 16, "中" to 17, "来" to 18, "去" to 19, "大" to 20,
+        "小" to 21, "好" to 22, "多" to 23, "少" to 24, "想" to 25,
+        "说" to 26, "做" to 27, "看" to 28, "知" to 29, "道" to 30,
+        "时" to 31, "候" to 32, "年" to 33, "月" to 34, "日" to 35,
+        "天" to 36, "地" to 37, "人" to 38, "生" to 39, "会" to 40,
+        "可" to 41, "以" to 42, "要" to 43, "子" to 44, "里" to 45,
+        "没" to 46, "就" to 47, "也" to 48, "都" to 49, "还" to 50,
+        "而" to 51, "从" to 52, "自" to 53, "到" to 54, "把" to 55,
+        "被" to 56, "让" to 57, "给" to 58, "对" to 59, "过" to 60,
+        "又" to 61, "再" to 62, "已" to 63, "经" to 64, "吧" to 65,
+        "呢" to 66, "啊" to 67, "吗" to 68, "嘛" to 69, "那" to 70,
+        "一" to 71, "个" to 72, "为" to 73, "着" to 74, "只" to 75,
+        "能" to 76, "很" to 77, "这" to 78, "着" to 79, "与" to 80,
+        "和" to 81, "或" to 82, "但" to 83, "所" to 84, "因" to 85
+    )
+
+    /**
+     * 模糊拼音声母互换对。
+     * 覆盖主流模糊音规则：z↔zh、c↔ch、s↔sh、n↔l、f↔h。
+     */
+    private val fuzzyPairs: List<Pair<String, String>> = listOf(
+        "z" to "zh", "zh" to "z",
+        "c" to "ch", "ch" to "c",
+        "s" to "sh", "sh" to "s",
+        "n" to "l", "l" to "n",
+        "f" to "h", "h" to "f"
+    )
 
     /**
      * 查找候选词。
@@ -524,8 +963,8 @@ object PinyinEngine {
         // 1. 先查词语字典（整体匹配）
         val words = wordMap[lower] ?: emptyList()
 
-        // 2. 查单字字典（整体匹配）
-        val chars = charMap[lower] ?: emptyList()
+        // 2. 查单字字典（整体匹配），并按字频排序
+        val chars = sortByFrequency(charMap[lower] ?: emptyList())
 
         // 3. 合并结果，词语优先
         val result = mutableListOf<String>()
@@ -536,13 +975,13 @@ object PinyinEngine {
         if (result.isEmpty() && lower.length > 2) {
             val split = splitSyllables(lower)
             if (split.isNotEmpty()) {
-                // 尝试逐字匹配
+                // 尝试逐字匹配，每个音节取频率最高的字
                 val combined = StringBuilder()
                 var allMatched = true
                 for (syl in split) {
                     val list = charMap[syl]
                     if (list != null && list.isNotEmpty()) {
-                        combined.append(list[0])
+                        combined.append(sortByFrequency(list).first())
                     } else {
                         allMatched = false
                         break
@@ -552,11 +991,11 @@ object PinyinEngine {
                     result.add(combined.toString())
                 }
 
-                // 也把第一个音节的单字加进去
+                // 也把第一个音节的单字加进去（按字频排序）
                 val firstSyl = split[0]
                 val firstChars = charMap[firstSyl]
                 if (firstChars != null) {
-                    result.addAll(firstChars)
+                    result.addAll(sortByFrequency(firstChars))
                 }
             }
         }
@@ -565,26 +1004,80 @@ object PinyinEngine {
         if (result.isEmpty()) {
             for (syl in validSyllables) {
                 if (syl.startsWith(lower) && syl != lower) {
-                    result.addAll(charMap[syl] ?: emptyList())
+                    result.addAll(sortByFrequency(charMap[syl] ?: emptyList()))
                     if (result.size >= 6) break
                 }
             }
         }
 
-        return result.distinct().take(10)
+        // 6. 若仍无结果，尝试模糊拼音变体
+        if (result.isEmpty()) {
+            val fuzzy = fuzzyLookup(lower)
+            if (fuzzy.isNotEmpty()) {
+                result.addAll(fuzzy)
+            }
+        }
+
+        return result.distinct().take(20)
+    }
+
+    /**
+     * 基于已选汉字进行联想推荐。
+     * 利用常用词组搭配关系，返回可能跟在输入汉字后面的候选字。
+     *
+     * @param chars 已输入的汉字（1-2个字）
+     * @return 联想候选列表
+     */
+    fun lookupByCharacter(chars: String): List<String> {
+        if (chars.isEmpty()) return emptyList()
+
+        val last = chars.last()
+        val result = mutableListOf<String>()
+
+        // 从词语字典中查找以该字开头的词语，提取后续字
+        for ((_, wordList) in wordMap) {
+            for (word in wordList) {
+                if (word.startsWith(last) && word.length > 1) {
+                    // 提取下一个字
+                    val nextChar = word.substring(1, 2)
+                    if (!result.contains(nextChar)) {
+                        result.add(nextChar)
+                    }
+                }
+            }
+            if (result.size >= 15) break
+        }
+
+        // 如果没有找到联想词，返回常用高频字
+        if (result.isEmpty()) {
+            result.addAll(listOf("的", "是", "了", "在", "有", "和", "不", "这", "我", "你", "他", "她", "们", "个", "上"))
+        }
+
+        return sortByFrequency(result).distinct().take(15)
     }
 
     /**
      * 拆分拼音音节。
-     * 简单贪心算法：从最长可能音节开始匹配。
      *
-     * 例: "nihao" → ["ni", "hao"]
-     * 例: "zhongguo" → ["zhong", "guo"]
+     * 采用动态规划寻找能完整覆盖输入串的最优拆分，优先长音节、音节数最少的方案；
+     * 若无法完整覆盖（例如用户正在输入的半截拼音），再回退到贪心算法跳过无法匹配的字符。
+     *
+     * 例: "nihao"     → ["ni", "hao"]
+     * 例: "zhongguo"  → ["zhong", "guo"]
+     * 例: "woaixuexi" → ["wo", "ai", "xue", "xi"]
      */
     private fun splitSyllables(input: String): List<String> {
+        if (input.isEmpty()) return emptyList()
+
+        // 先尝试动态规划：寻找能完整覆盖输入串的拆分
+        val dpResult = splitSyllablesDP(input)
+        if (dpResult.isNotEmpty()) {
+            return dpResult
+        }
+
+        // 回退到贪心算法：跳过无法匹配的字符
         val result = mutableListOf<String>()
         var pos = 0
-
         while (pos < input.length) {
             var found = false
             // 从最长(6)到最短(1)尝试匹配
@@ -604,6 +1097,171 @@ object PinyinEngine {
         }
 
         return result
+    }
+
+    /**
+     * 动态规划拆分拼音音节。
+     *
+     * 记忆化搜索：dp(start) = 从位置 start 到末尾、能完整覆盖的最优音节列表（null 表示不可行）。
+     * 在所有可行拆分中选择音节数最少者（等价于尽量使用长音节），符合主流输入法的拆分直觉。
+     */
+    private fun splitSyllablesDP(input: String): List<String> {
+        val n = input.length
+        if (n == 0) return emptyList()
+
+        val memo = HashMap<Int, List<String>?>()
+
+        fun solve(start: Int): List<String>? {
+            if (start == n) return emptyList()
+            memo[start]?.let { return it }
+
+            var best: List<String>? = null
+            val maxLen = minOf(6, n - start)
+            for (len in maxLen downTo 1) {
+                val sub = input.substring(start, start + len)
+                if (sub in validSyllables) {
+                    val rest = solve(start + len)
+                    if (rest != null) {
+                        val candidate = listOf(sub) + rest
+                        val bestSize = best?.size ?: Int.MAX_VALUE
+                        if (candidate.size < bestSize) {
+                            best = candidate
+                        }
+                    }
+                }
+            }
+            memo[start] = best
+            return best
+        }
+
+        return solve(0) ?: emptyList()
+    }
+
+    /**
+     * 按字频对候选字排序（频率高者靠前）。
+     * 未收录在频率表中的字保持原相对顺序，排在已收录字之后。
+     */
+    private fun sortByFrequency(chars: List<String>): List<String> {
+        if (chars.size <= 1) return chars
+        // 稳定排序：保留字典原有顺序作为次要排序键
+        return chars.mapIndexed { index, ch -> ch to index }
+            .sortedWith(compareBy({ charFrequency[it.first] ?: Int.MAX_VALUE }, { it.second }))
+            .map { it.first }
+    }
+
+    /**
+     * 生成单个音节的模糊拼音变体（含原音节）。
+     * 仅替换声母部分（z/zh、c/ch、s/sh、n/l、f/h），韵母保持不变。
+     */
+    private fun fuzzySyllableVariants(syllable: String): List<String> {
+        val variants = mutableListOf(syllable)
+        for ((from, to) in fuzzyPairs) {
+            if (syllable.startsWith(from)) {
+                val swapped = to + syllable.substring(from.length)
+                if (swapped != syllable && swapped !in variants) {
+                    variants.add(swapped)
+                }
+            }
+        }
+        return variants
+    }
+
+    /**
+     * 生成整串拼音的模糊变体（含原串）。
+     * 用于词语整体匹配：替换首音节的声母即可覆盖大多数模糊音场景。
+     */
+    private fun fuzzyStringVariants(input: String): List<String> {
+        val variants = mutableListOf(input)
+        for ((from, to) in fuzzyPairs) {
+            if (input.startsWith(from)) {
+                val swapped = to + input.substring(from.length)
+                if (swapped != input && swapped !in variants) {
+                    variants.add(swapped)
+                }
+            }
+        }
+        return variants
+    }
+
+    /**
+     * 模糊拼音查找。
+     *
+     * 尝试常见的模糊拼音变体（z↔zh、c↔ch、s↔sh、n↔l、f↔h）：
+     * 1. 对整串做声母替换后查词语字典；
+     * 2. 拆分音节后，对每个音节做模糊变体并查单字字典。
+     *
+     * @param input 用户输入的拼音串
+     * @return 模糊匹配到的候选列表
+     */
+    fun fuzzyLookup(input: String): List<String> {
+        if (input.isEmpty()) return emptyList()
+        val lower = input.lowercase()
+        val result = mutableListOf<String>()
+
+        // 1. 整体模糊变体（用于词语匹配）
+        for (variant in fuzzyStringVariants(lower)) {
+            wordMap[variant]?.let { result.addAll(it) }
+        }
+
+        // 2. 按音节拆分后，对每个音节尝试模糊变体并匹配单字
+        val syllables = splitSyllables(lower)
+        for (syl in syllables) {
+            for (variant in fuzzySyllableVariants(syl)) {
+                charMap[variant]?.let { result.addAll(sortByFrequency(it)) }
+            }
+        }
+
+        return result.distinct().take(20)
+    }
+
+    /**
+     * 句子级拼音转换。
+     *
+     * 将完整的连续拼音串拆分为音节，再贪心地用最长词语覆盖、剩余音节用单字补全，
+     * 组合成最可能的句子。
+     *
+     * 例: "woaixuexi" → ["wo","ai","xue","xi"] → "我爱学习"（"xuexi" 命中词语"学习"）
+     *
+     * @param pinyin 完整拼音串（无分隔符）
+     * @return 最佳匹配的句子；若无法匹配返回空字符串
+     */
+    fun lookupSentence(pinyin: String): String {
+        if (pinyin.isEmpty()) return ""
+        val lower = pinyin.lowercase()
+
+        // 先尝试整体词语匹配
+        wordMap[lower]?.firstOrNull()?.let { return it }
+
+        val syllables = splitSyllables(lower)
+        if (syllables.isEmpty()) return ""
+
+        val sb = StringBuilder()
+        var i = 0
+        while (i < syllables.size) {
+            var matched = false
+            // 尝试从当前位置开始用最长词语覆盖（最多取 6 个音节）
+            val maxWordLen = minOf(6, syllables.size - i)
+            for (wlen in maxWordLen downTo 2) {
+                val combined = syllables.subList(i, i + wlen).joinToString("")
+                val word = wordMap[combined]?.firstOrNull()
+                if (word != null) {
+                    sb.append(word)
+                    i += wlen
+                    matched = true
+                    break
+                }
+            }
+            if (!matched) {
+                // 剩余音节用单字补全，取该音节下频率最高的字
+                val syl = syllables[i]
+                val chars = charMap[syl]
+                if (chars != null && chars.isNotEmpty()) {
+                    sb.append(sortByFrequency(chars).first())
+                }
+                i++
+            }
+        }
+        return sb.toString()
     }
 
     /**

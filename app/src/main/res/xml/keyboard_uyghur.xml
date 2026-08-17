@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   维语键盘布局 — 严格参照截图。
-  三行维语字母顺序固定不变。
-  底部增加 ئ 键。
+  修复布局溢出：11 键行 keyWidth 从 9%p 改为 8.5%p，gap 从 2dp 改为 1dp。
+  11 × 8.5% = 93.5% + 11 × 1dp = 11dp，总宽 < 100%，确保所有键显示。
 
   Row 1: چ ۋ ئې ر ت ي ئۇ كۆ ئو پ ژ (11键)
   Row 2: ھ س د ئا ئە ئى ق ك ل ف گ (11键)
@@ -10,9 +10,9 @@
   Row 4: [符] [123] [ئ] [space] [⌫] [↵]
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="9%p"
+    android:keyWidth="8.5%p"
     android:keyHeight="45dp"
-    android:horizontalGap="2dp"
+    android:horizontalGap="1dp"
     android:verticalGap="5dp">
 
     <!-- Row 1: چ ۋ ئې ر ت ي ئۇ كۆ ئو پ ژ -->
@@ -45,18 +45,18 @@
         <Key android:codes="0" android:keyLabel="گ"  android:keyOutputText="گ"  android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 3: ز ش غ ئۆ ب ن م خ ج ئۈ -->
+    <!-- Row 3: ز ش غ ئۆ ب ن م خ ج ئۈ (10键，用9%p) -->
     <Row>
-        <Key android:codes="0" android:keyLabel="ز"  android:keyOutputText="ز"  android:keyWidth="9.5%p" android:keyEdgeFlags="left" />
-        <Key android:codes="0" android:keyLabel="ش"  android:keyOutputText="ش"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="غ"  android:keyOutputText="غ"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="ئۆ" android:keyOutputText="ئۆ" android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="ب"  android:keyOutputText="ب"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="ن"  android:keyOutputText="ن"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="م"  android:keyOutputText="م"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="خ"  android:keyOutputText="خ"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="ج"  android:keyOutputText="ج"  android:keyWidth="9.5%p" />
-        <Key android:codes="0" android:keyLabel="ئۈ" android:keyOutputText="ئۈ" android:keyWidth="9.5%p" android:keyEdgeFlags="right" />
+        <Key android:codes="0" android:keyLabel="ز"  android:keyOutputText="ز"  android:keyWidth="9%p" android:keyEdgeFlags="left" />
+        <Key android:codes="0" android:keyLabel="ش"  android:keyOutputText="ش"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="غ"  android:keyOutputText="غ"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="ئۆ" android:keyOutputText="ئۆ" android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="ب"  android:keyOutputText="ب"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="ن"  android:keyOutputText="ن"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="م"  android:keyOutputText="م"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="خ"  android:keyOutputText="خ"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="ج"  android:keyOutputText="ج"  android:keyWidth="9%p" />
+        <Key android:codes="0" android:keyLabel="ئۈ" android:keyOutputText="ئۈ" android:keyWidth="9%p" android:keyEdgeFlags="right" />
     </Row>
 
     <!-- Row 4: [符] [123] [ئ] [space] [⌫] [↵] -->

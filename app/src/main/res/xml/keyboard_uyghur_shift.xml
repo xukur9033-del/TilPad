@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   维语键盘 Shift 层 — 补全 11 个缺失字母 + 常用标点。
-  按 Shift 键切换到此层，再按 Shift 返回主键盘。
+  修复布局溢出：keyWidth 从 9%p 改为 8.5%p，gap 保持 1dp。
 
   Row 1: ڭ ە و ۇ ۈ ى ئا ئە ئې ئۆ
-  Row 2: ئۈ . ، ؟ ! : ; " '
-  Row 3: [⇧] - = + * / \ | ~ [⌫]
+  Row 2: ئۈ . ، ؟ ! : ; " ' -
+  Row 3: [⇧] = + * / \ | ~ _ [⌫]
   Row 4: [ABC] [🌐] [space] [↵]
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="10%p"
+    android:keyWidth="8.5%p"
     android:keyHeight="45dp"
-    android:horizontalGap="3dp"
+    android:horizontalGap="1dp"
     android:verticalGap="5dp">
 
-    <!-- Row 1: 缺失字母 -->
+    <!-- Row 1: 缺失字母 (10键) -->
     <Row android:rowEdgeFlags="top">
         <Key android:codes="0" android:keyLabel="ڭ"  android:keyOutputText="ڭ"  android:keyEdgeFlags="left" />
         <Key android:codes="0" android:keyLabel="ە"  android:keyOutputText="ە" />
@@ -28,7 +28,7 @@
         <Key android:codes="0" android:keyLabel="ئۆ" android:keyOutputText="ئۆ" android:keyEdgeFlags="right" />
     </Row>
 
-    <!-- Row 2: ئۈ + 常用标点 -->
+    <!-- Row 2: ئۈ + 常用标点 (10键) -->
     <Row>
         <Key android:codes="0" android:keyLabel="ئۈ" android:keyOutputText="ئۈ" android:keyEdgeFlags="left" />
         <Key android:codes="46"  android:keyLabel="." />
@@ -44,7 +44,7 @@
 
     <!-- Row 3: [⇧] 符号 [⌫] -->
     <Row>
-        <Key android:codes="-1"  android:keyLabel="⇧" android:keyWidth="13%p"
+        <Key android:codes="-1"  android:keyLabel="⇧" android:keyWidth="12%p"
              android:isModifier="true" android:keyEdgeFlags="left" />
         <Key android:codes="61"  android:keyLabel="="  android:keyWidth="8.5%p" />
         <Key android:codes="43"  android:keyLabel="+"  android:keyWidth="8.5%p" />
@@ -54,7 +54,7 @@
         <Key android:codes="124" android:keyLabel="|"  android:keyWidth="8.5%p" />
         <Key android:codes="126" android:keyLabel="~"  android:keyWidth="8.5%p" />
         <Key android:codes="95"  android:keyLabel="_"  android:keyWidth="8.5%p" />
-        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="13%p"
+        <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="12%p"
              android:isRepeatable="true" android:keyEdgeFlags="right" />
     </Row>
 

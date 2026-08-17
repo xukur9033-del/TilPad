@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  首次启动引导页布局 — 参考截图效果。
+  - 深色半透明蒙层背景
+  - 顶部白色标题 + 右上角圆形关闭X按钮
+  - 中间手机样机示意图（含开关UI + 手指点击手势）
+  - 底部上下排列两个大圆角按钮
+  - 小屏幕适配：ScrollView 包裹，防止内容被裁切
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B3000000">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingStart="28dp"
+            android:paddingEnd="28dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="48dp">
+
+            <!-- ====== 顶部标题栏 ====== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
+
+                <!-- 弹性间距 -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- 标题 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/guide_title"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="16dp" />
+
+                <!-- 弹性间距 -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- 右上角圆形关闭X按钮 -->
+                <ImageView
+                    android:id="@+id/btn_close"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:background="@drawable/btn_close_circle"
+                    android:scaleType="centerInside"
+                    android:padding="8dp"
+                    android:contentDescription="Close"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+            <!-- ====== 手机样机示意图 ====== -->
+            <LinearLayout
+                android:layout_width="260dp"
+                android:layout_height="380dp"
+                android:orientation="vertical"
+                android:background="@drawable/phone_mockup_bg"
+                android:padding="6dp"
+                android:layout_marginBottom="32dp">
+
+                <!-- 手机屏幕内部 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:background="@drawable/phone_screen_bg"
+                    android:padding="16dp">
+
+                    <!-- 屏幕顶部状态栏文字 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guide_language_input"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- 输入法列表项 - TilPad -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/guide_ime_item_bg"
+                        android:padding="12dp"
+                        android:layout_marginBottom="8dp">
+
+                        <!-- 应用图标 -->
+                        <View
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/ic_launcher"
+                            android:layout_marginEnd="12dp" />
+
+                        <!-- 名称 -->
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="TilPad输入法"
+                            android:textColor="#FFFFFF"
+                            android:textSize="13sp" />
+
+                        <!-- 开关UI - 已开启绿色 -->
+                        <LinearLayout
+                            android:layout_width="48dp"
+                            android:layout_height="28dp"
+                            android:orientation="horizontal"
+                            android:background="@drawable/guide_switch_on_bg"
+                            android:gravity="center_vertical|end"
+                            android:paddingEnd="3dp">
+
+                            <View
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/guide_switch_thumb" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- 其他输入法项（灰色关闭状态） -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/guide_ime_item_bg"
+                        android:padding="12dp"
+                        android:layout_marginBottom="16dp">
+
+                        <View
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="#666688"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="谷歌拼音输入法"
+                            android:textColor="#99FFFFFF"
+                            android:textSize="13sp" />
+
+                        <!-- 开关UI - 关闭灰色 -->
+                        <LinearLayout
+                            android:layout_width="48dp"
+                            android:layout_height="28dp"
+                            android:orientation="horizontal"
+                            android:background="@drawable/btn_guide_grey"
+                            android:gravity="center_vertical|start"
+                            android:paddingStart="3dp">
+
+                            <View
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:background="@drawable/guide_switch_thumb" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- 手指点击手势提示 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <!-- 手指图标 -->
+                        <TextView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:text="👆"
+                            android:textSize="36sp"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/guide_tap_to_enable"
+                            android:textColor="#34C759"
+                            android:textSize="12sp"
+                            android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ====== 底部按钮区 ====== -->
+
+            <!-- 第一步按钮：蓝色渐变，正常可点击 -->
+            <Button
+                android:id="@+id/btn_step1"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/guide_step1"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/btn_guide_selector"
+                android:stateListAnimator="@null"
+                android:layout_marginBottom="12dp" />
+
+            <!-- 第二步按钮：初始灰色禁用 -->
+            <Button
+                android:id="@+id/btn_step2"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/guide_step2"
+                android:textColor="#999999"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/btn_guide_selector"
+                android:stateListAnimator="@null"
+                android:enabled="false" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

@@ -36,21 +36,22 @@
                     <ImageView
                         android:layout_width="72dp"
                         android:layout_height="72dp"
-                        android:src="@drawable/ic_launcher" />
+                        android:src="@drawable/ic_launcher"
+                        android:scaleType="fitCenter" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TilPad 维语输入法"
+                        android:text="TilPad"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp"
+                        android:textSize="22sp"
                         android:textStyle="bold"
                         android:layout_marginTop="12dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="版本 3.0"
+                        android:text="@string/settings_version"
                         android:textColor="#BBDEFB"
                         android:textSize="13sp"
                         android:layout_marginTop="4dp" />
@@ -68,7 +69,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="测试输入"
+                        android:text="@string/home_title"
                         android:textColor="#1976D2"
                         android:textSize="15sp"
                         android:textStyle="bold"
@@ -78,15 +79,17 @@
                         android:id="@+id/test_input"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:hint="在此输入测试维语、中文..."
+                        android:hint="@string/home_search_hint"
                         android:background="@drawable/edit_bg"
                         android:padding="12dp"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="点击输入框，切换到 TilPad 键盘即可测试"
+                        android:text="@string/home_hint"
                         android:textColor="#999999"
                         android:textSize="12sp"
                         android:layout_marginTop="6dp" />
@@ -103,6 +106,49 @@
                     android:background="@drawable/card_bg"
                     android:padding="4dp">
 
+                    <!-- App 内语言切换 -->
+                    <LinearLayout
+                        android:id="@+id/item_app_language"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackground">
+
+                        <View
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="#7C3AED"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_app_language"
+                            android:textSize="15sp"
+                            android:textColor="#333333" />
+
+                        <TextView
+                            android:id="@+id/tv_app_language_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="13sp"
+                            android:textColor="#999999" />
+
+                    </LinearLayout>
+
+                    <!-- 分隔线 -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#F0F0F0"
+                        android:layout_marginStart="56dp" />
+
                     <LinearLayout
                         android:id="@+id/item_enable_ime"
                         android:layout_width="match_parent"
@@ -114,8 +160,8 @@
                         android:focusable="true"
                         android:background="?android:attr/selectableItemBackground">
                         <View android:layout_width="32dp" android:layout_height="32dp" android:background="#2563EB" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="启用 TilPad 输入法" android:textSize="15sp" android:textColor="#333333" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="20sp" android:textColor="#999999" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_enable_ime" android:textSize="15sp" android:textColor="#333333" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=">" android:textSize="20sp" android:textColor="#999999" />
                     </LinearLayout>
                     <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="56dp" />
                     <LinearLayout
@@ -129,8 +175,8 @@
                         android:focusable="true"
                         android:background="?android:attr/selectableItemBackground">
                         <View android:layout_width="32dp" android:layout_height="32dp" android:background="#4CAF50" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="切换默认输入法" android:textSize="15sp" android:textColor="#333333" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="20sp" android:textColor="#999999" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_switch_ime" android:textSize="15sp" android:textColor="#333333" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=">" android:textSize="20sp" android:textColor="#999999" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -152,13 +198,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="主题皮肤"
+                    android:text="@string/skin_title"
                     android:textColor="#1976D2"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- 皮肤网格 -->
+                <!-- 皮肤网格 第一行 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -166,20 +212,21 @@
                     android:weightSum="3"
                     android:layout_marginBottom="12dp">
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp">
-                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#2563EB" android:layout_marginBottom="8dp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="默认蓝" android:textSize="12sp" android:textColor="#666666" />
+                    <LinearLayout android:id="@+id/skin_default" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#E8EAED" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_default" android:textSize="12sp" android:textColor="#666666" />
                     </LinearLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp">
-                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#37474F" android:layout_marginBottom="8dp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="深色" android:textSize="12sp" android:textColor="#666666" />
+                    <LinearLayout android:id="@+id/skin_dark" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#1A1A2E" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_dark" android:textSize="12sp" android:textColor="#666666" />
                     </LinearLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:padding="8dp">
-                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#E91E63" android:layout_marginBottom="8dp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="粉色" android:textSize="12sp" android:textColor="#666666" />
+                    <LinearLayout android:id="@+id/skin_blue" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#1A237E" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_blue" android:textSize="12sp" android:textColor="#666666" />
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- 皮肤网格 第二行 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -187,38 +234,58 @@
                     android:weightSum="3"
                     android:layout_marginBottom="12dp">
 
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp">
-                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#4CAF50" android:layout_marginBottom="8dp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="绿色" android:textSize="12sp" android:textColor="#666666" />
+                    <LinearLayout android:id="@+id/skin_green" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#1B5E20" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_green" android:textSize="12sp" android:textColor="#666666" />
                     </LinearLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp">
-                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#FF9800" android:layout_marginBottom="8dp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="橙色" android:textSize="12sp" android:textColor="#666666" />
+                    <LinearLayout android:id="@+id/skin_pink" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#880E4F" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_pink" android:textSize="12sp" android:textColor="#666666" />
                     </LinearLayout>
-                    <LinearLayout android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:padding="8dp">
-                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#9C27B0" android:layout_marginBottom="8dp" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="紫色" android:textSize="12sp" android:textColor="#666666" />
+                    <LinearLayout android:id="@+id/skin_orange" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#E65100" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_orange" android:textSize="12sp" android:textColor="#666666" />
                     </LinearLayout>
+                </LinearLayout>
+
+                <!-- 皮肤网格 第三行 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout android:id="@+id/skin_purple" android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/card_bg" android:layout_marginEnd="6dp" android:padding="8dp" android:clickable="true" android:focusable="true">
+                        <View android:layout_width="48dp" android:layout_height="48dp" android:background="#4A148C" android:layout_marginBottom="8dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/skin_purple" android:textSize="12sp" android:textColor="#666666" />
+                    </LinearLayout>
+                    <View android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" />
+                    <View android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" />
                 </LinearLayout>
 
                 <!-- 自定义相册导入 -->
                 <LinearLayout
+                    android:id="@+id/skin_custom"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@drawable/card_bg"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_gallery" />
+                        android:src="@android:drawable/ic_menu_gallery"
+                        android:scaleType="fitCenter" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="从相册导入图片作为键盘背景"
+                        android:text="@string/skin_custom"
                         android:textSize="14sp"
                         android:textColor="#666666"
                         android:layout_marginTop="8dp" />
@@ -243,7 +310,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="字体设置"
+                    android:text="@string/font_title"
                     android:textColor="#1976D2"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -258,21 +325,21 @@
                     android:padding="4dp"
                     android:layout_marginBottom="16dp">
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="键盘字体" android:textColor="#333333" android:textSize="14sp" android:padding="12dp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/font_title" android:textColor="#333333" android:textSize="14sp" android:padding="12dp" />
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
-                        <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="默认字体" android:textSize="15sp" android:layout_marginStart="8dp" />
+                    <LinearLayout android:id="@+id/font_default" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_font_default" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/font_default" android:textSize="15sp" android:layout_marginStart="8dp" />
                     </LinearLayout>
                     <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="44dp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
-                        <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="圆体" android:textSize="15sp" android:layout_marginStart="8dp" />
+                    <LinearLayout android:id="@+id/font_round" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_font_round" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/font_round" android:textSize="15sp" android:layout_marginStart="8dp" />
                     </LinearLayout>
                     <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="44dp" />
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
-                        <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="细体" android:textSize="15sp" android:layout_marginStart="8dp" />
+                    <LinearLayout android:id="@+id/font_thin" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_font_thin" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/font_thin" android:textSize="15sp" android:layout_marginStart="8dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -284,18 +351,19 @@
                     android:background="@drawable/card_bg"
                     android:padding="16dp">
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="字体大小" android:textColor="#333333" android:textSize="14sp" android:layout_marginBottom="12dp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/font_size" android:textColor="#333333" android:textSize="14sp" android:layout_marginBottom="12dp" />
 
                     <SeekBar
+                        android:id="@+id/font_size_slider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:max="10"
                         android:progress="5" />
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="小" android:textSize="10sp" android:textColor="#999999" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="A" android:textSize="10sp" android:textColor="#999999" />
                         <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="大" android:textSize="14sp" android:textColor="#999999" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="A" android:textSize="14sp" android:textColor="#999999" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -315,7 +383,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- 偏好设置 -->
+                <!-- 偏好设置 — 每项只出现一次 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -326,24 +394,60 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <View android:layout_width="32dp" android:layout_height="32dp" android:background="#00BCD4" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="键盘震动" android:textSize="15sp" android:textColor="#333333" />
-                        <com.google.android.material.switchmaterial.SwitchMaterial android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_vibration" android:textSize="15sp" android:textColor="#333333" />
+                        <Switch android:id="@+id/switch_vibration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:track="@drawable/switch_track_selector" android:thumb="@drawable/switch_thumb_selector" android:switchMinWidth="48dp" />
                     </LinearLayout>
                     <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="56dp" />
                     <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <View android:layout_width="32dp" android:layout_height="32dp" android:background="#FF5722" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="按键声音" android:textSize="15sp" android:textColor="#333333" />
-                        <com.google.android.material.switchmaterial.SwitchMaterial android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_sound" android:textSize="15sp" android:textColor="#333333" />
+                        <Switch android:id="@+id/switch_sound" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false" android:track="@drawable/switch_track_selector" android:thumb="@drawable/switch_thumb_selector" android:switchMinWidth="48dp" />
                     </LinearLayout>
                     <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="56dp" />
                     <LinearLayout android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <View android:layout_width="32dp" android:layout_height="32dp" android:background="#455A64" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="深色模式" android:textSize="15sp" android:textColor="#333333" />
-                        <com.google.android.material.switchmaterial.SwitchMaterial android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_dark_mode" android:textSize="15sp" android:textColor="#333333" />
+                        <Switch android:id="@+id/switch_dark_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="false" android:track="@drawable/switch_track_selector" android:thumb="@drawable/switch_thumb_selector" android:switchMinWidth="48dp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- 关于 -->
+                <!-- 音效选择 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="4dp"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_sound_effects" android:textColor="#333333" android:textSize="14sp" android:padding="12dp" />
+
+                    <LinearLayout android:id="@+id/sound_standard" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_sound_0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_sound_standard" android:textSize="15sp" android:layout_marginStart="8dp" />
+                        <TextView android:id="@+id/preview_sound_0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_preview" android:textSize="13sp" android:textColor="#2563EB" android:padding="8dp" android:clickable="true" />
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="44dp" />
+                    <LinearLayout android:id="@+id/sound_spacebar" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_sound_1" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_sound_spacebar" android:textSize="15sp" android:layout_marginStart="8dp" />
+                        <TextView android:id="@+id/preview_sound_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_preview" android:textSize="13sp" android:textColor="#2563EB" android:padding="8dp" android:clickable="true" />
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="44dp" />
+                    <LinearLayout android:id="@+id/sound_delete" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_sound_2" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_sound_delete" android:textSize="15sp" android:layout_marginStart="8dp" />
+                        <TextView android:id="@+id/preview_sound_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_preview" android:textSize="13sp" android:textColor="#2563EB" android:padding="8dp" android:clickable="true" />
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="44dp" />
+                    <LinearLayout android:id="@+id/sound_return" android:layout_width="match_parent" android:layout_height="48dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true">
+                        <RadioButton android:id="@+id/radio_sound_3" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_sound_return" android:textSize="15sp" android:layout_marginStart="8dp" />
+                        <TextView android:id="@+id/preview_sound_3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_preview" android:textSize="13sp" android:textColor="#2563EB" android:padding="8dp" android:clickable="true" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 关于 & 工具 — 每项只出现一次 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -351,20 +455,26 @@
                     android:background="@drawable/card_bg"
                     android:padding="4dp">
 
-                    <LinearLayout android:id="@+id/item_about" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground">
-                        <View android:layout_width="32dp" android:layout_height="32dp" android:background="#3F51B5" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="关于 TilPad" android:textSize="15sp" android:textColor="#333333" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="20sp" android:textColor="#999999" />
+                    <LinearLayout android:id="@+id/item_feedback" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground">
+                        <View android:layout_width="32dp" android:layout_height="32dp" android:background="#4CAF50" android:layout_marginEnd="12dp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_feedback" android:textSize="15sp" android:textColor="#333333" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=">" android:textSize="20sp" android:textColor="#999999" />
                     </LinearLayout>
                     <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="56dp" />
-                    <LinearLayout android:id="@+id/item_feedback" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground">
-                        <View android:layout_width="32dp" android:layout_height="32dp" android:background="#E91E63" android:layout_marginEnd="12dp" />
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="反馈建议" android:textSize="15sp" android:textColor="#333333" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="20sp" android:textColor="#999999" />
+                    <LinearLayout android:id="@+id/item_clear_cache" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground">
+                        <View android:layout_width="32dp" android:layout_height="32dp" android:background="#FF9800" android:layout_marginEnd="12dp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_clear_cache" android:textSize="15sp" android:textColor="#333333" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=">" android:textSize="20sp" android:textColor="#999999" />
+                    </LinearLayout>
+                    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#EEEEEE" android:layout_marginStart="56dp" />
+                    <LinearLayout android:id="@+id/item_about" android:layout_width="match_parent" android:layout_height="52dp" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp" android:clickable="true" android:focusable="true" android:background="?android:attr/selectableItemBackground">
+                        <View android:layout_width="32dp" android:layout_height="32dp" android:background="#3F51B5" android:layout_marginEnd="12dp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/settings_about" android:textSize="15sp" android:textColor="#333333" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=">" android:textSize="20sp" android:textColor="#999999" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="TilPad © 2026" android:textColor="#999999" android:textSize="12sp" android:gravity="center" android:layout_marginTop="20dp" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_copyright" android:textColor="#999999" android:textSize="12sp" android:gravity="center" android:layout_marginTop="20dp" />
 
             </LinearLayout>
         </ScrollView>
@@ -380,17 +490,17 @@
         android:weightSum="4"
         android:elevation="8dp">
 
-        <LinearLayout android:id="@+id/tab_home" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="首页" android:textSize="13sp" android:textColor="#2563EB" />
+        <LinearLayout android:id="@+id/tab_home" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/tab_home" android:textSize="13sp" android:textColor="#2563EB" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/tab_skin" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="皮肤" android:textSize="13sp" android:textColor="#999999" />
+        <LinearLayout android:id="@+id/tab_skin" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/tab_skin" android:textSize="13sp" android:textColor="#999999" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/tab_font" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="字体" android:textSize="13sp" android:textColor="#999999" />
+        <LinearLayout android:id="@+id/tab_font" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/tab_font" android:textSize="13sp" android:textColor="#999999" />
         </LinearLayout>
-        <LinearLayout android:id="@+id/tab_settings" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="设置" android:textSize="13sp" android:textColor="#999999" />
+        <LinearLayout android:id="@+id/tab_settings" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/tab_settings" android:textSize="13sp" android:textColor="#999999" />
         </LinearLayout>
     </LinearLayout>
 

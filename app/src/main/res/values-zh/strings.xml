@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">TilPad 维语输入法</string>
+    <string name="subtype_uyghur">Uyghur (ULY)</string>
+    <string name="subtype_chinese">中文拼音</string>
+    <string name="subtype_english">English</string>
+
+    <!-- Home Page -->
+    <string name="tab_home">首页</string>
+    <string name="tab_skin">皮肤</string>
+    <string name="tab_font">字体</string>
+    <string name="tab_settings">设置</string>
+    <string name="home_title">测试键盘</string>
+    <string name="home_hint">点击输入框测试维语、中文、英文输入</string>
+    <string name="home_search_hint">在此输入测试文字</string>
+
+    <!-- Settings Page -->
+    <string name="settings_app_language">应用语言</string>
+    <string name="settings_enable_ime">启用输入法</string>
+    <string name="settings_switch_ime">切换输入法</string>
+    <string name="settings_vibration">按键震动</string>
+    <string name="settings_sound">按键声音</string>
+    <string name="settings_dark_mode">深色模式</string>
+    <string name="settings_about">关于 TilPad</string>
+    <string name="settings_feedback">分享应用</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_sound_standard">标准音</string>
+    <string name="settings_sound_spacebar">空格音</string>
+    <string name="settings_sound_delete">删除音</string>
+    <string name="settings_sound_return">回车音</string>
+    <string name="settings_sound_effects">音效选择</string>
+    <string name="settings_preview">试听</string>
+    <string name="settings_version">版本 5.0</string>
+    <string name="settings_copyright">TilPad (c) 2026</string>
+
+    <!-- Language display names -->
+    <string name="language_ug">维语</string>
+    <string name="language_zh">中文</string>
+    <string name="language_en">英文</string>
+
+    <!-- Skin Page -->
+    <string name="skin_title">键盘皮肤</string>
+    <string name="skin_default">默认白色</string>
+    <string name="skin_dark">深色</string>
+    <string name="skin_blue">海洋蓝</string>
+    <string name="skin_green">森林绿</string>
+    <string name="skin_pink">玫瑰粉</string>
+    <string name="skin_orange">日落橙</string>
+    <string name="skin_purple">皇室紫</string>
+    <string name="skin_custom">自定义图片</string>
+    <string name="skin_applied">皮肤已应用</string>
+
+    <!-- Font Page -->
+    <string name="font_title">键盘字体</string>
+    <string name="font_default">默认</string>
+    <string name="font_round">圆角</string>
+    <string name="font_thin">细体</string>
+    <string name="font_applied">字体已应用</string>
+    <string name="font_size">字体大小</string>
+
+    <!-- Guide Page -->
+    <string name="guide_title">添加 TilPad 输入法</string>
+    <string name="guide_step1">1. 启用 TilPad</string>
+    <string name="guide_step2">2. 切换到 TilPad</string>
+    <string name="guide_step1_desc">在系统设置中开启 TilPad</string>
+    <string name="guide_step2_desc">选择 TilPad 作为您的输入法</string>
+    <string name="guide_language_input">语言和输入法</string>
+    <string name="guide_tap_to_enable">点击开启 TilPad</string>
+    <string name="guide_error_settings">无法打开系统设置</string>
+    <string name="guide_error_chooser">无法打开输入法选择</string>
+
+    <!-- Common -->
+    <string name="cancel">取消</string>
+    <string name="select_language">选择语言 / تىل تاللاش / Language</string>
+    <string name="cache_cleared">缓存已清除</string>
+    <string name="clear_failed">清除失败</string>
+    <string name="cannot_open_gallery">无法打开相册</string>
+    <string name="background_set">背景已设置</string>
+    <string name="font_size_saved">字体大小已保存</string>
+</resources>

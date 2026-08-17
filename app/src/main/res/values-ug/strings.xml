@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_name">TilPad ئۇيغۇر كىرگۈزگۈچ</string>
+    <string name="subtype_uyghur">Uyghur (ULY)</string>
+    <string name="subtype_chinese">خەنزۇچە پىنيىن</string>
+    <string name="subtype_english">English</string>
+
+    <!-- Home Page -->
+    <string name="tab_home">باش بەت</string>
+    <string name="tab_skin">تېرە</string>
+    <string name="tab_font">خەت نۇسخا</string>
+    <string name="tab_settings">تەڭشەك</string>
+    <string name="home_title">سىناق كۇنۇپكا تاختىسى</string>
+    <string name="home_hint">ئۇيغۇر، خەنزۇ، ئىنگىلىزچە كىرگۈزۈشنى سىناڭ</string>
+    <string name="home_search_hint">بۇ يەرگە سىناق يېزىڭ</string>
+
+    <!-- Settings Page -->
+    <string name="settings_app_language">ئەپ تىلى</string>
+    <string name="settings_enable_ime">كىرگۈزگۈچنى قوزغىتىش</string>
+    <string name="settings_switch_ime">كىرگۈزگۈچ ئالماشتۇرۇش</string>
+    <string name="settings_vibration">كۇنۇپكا تىتىرىشى</string>
+    <string name="settings_sound">كۇنۇپكا ئاۋازى</string>
+    <string name="settings_dark_mode">قاراڭغۇ ھالەت</string>
+    <string name="settings_about">TilPad ھەققىدە</string>
+    <string name="settings_feedback">ئەپ ھەمبەھىرلەش</string>
+    <string name="settings_clear_cache">غەملەكنى تازىلاش</string>
+    <string name="settings_sound_standard">ئۆلچەملىك</string>
+    <string name="settings_sound_spacebar">بوشلۇق كۇنۇپكا</string>
+    <string name="settings_sound_delete">ئۆچۈرۈش</string>
+    <string name="settings_sound_return">قايتىش</string>
+    <string name="settings_sound_effects">ئاۋاز ئېفېكتى</string>
+    <string name="settings_preview">ئاڭلاپ بېقىش</string>
+    <string name="settings_version">نەشرى 5.0</string>
+    <string name="settings_copyright">TilPad (c) 2026</string>
+
+    <!-- Language display names -->
+    <string name="language_ug">ئۇيغۇرچە</string>
+    <string name="language_zh">خەنزۇچە</string>
+    <string name="language_en">ئىنگىلىزچە</string>
+
+    <!-- Skin Page -->
+    <string name="skin_title">كۇنۇپكا تاختىسى تېرىسى</string>
+    <string name="skin_default">ئۆلچەملىك ئاق</string>
+    <string name="skin_dark">قاراڭغۇ</string>
+    <string name="skin_blue">ئوكيان كۆك</string>
+    <string name="skin_green">ئورمان يېشىل</string>
+    <string name="skin_pink">گۈل قىزىل</string>
+    <string name="skin_orange">كۈن پېتىش نارىنجى</string>
+    <string name="skin_purple">خان جەمەتى بىنەپشە</string>
+    <string name="skin_custom">ئۆزى بەلگىلەش رەسىم</string>
+    <string name="skin_applied">تېرە قوللىنىلدى</string>
+
+    <!-- Font Page -->
+    <string name="font_title">كۇنۇپكا خەت نۇسخا</string>
+    <string name="font_default">ئۆلچەملىك</string>
+    <string name="font_round">يۇمىلاق</string>
+    <string name="font_thin">ئىنچىكە</string>
+    <string name="font_applied">خەت نۇسخا قوللىنىلدى</string>
+    <string name="font_size">خەت چوڭلۇقى</string>
+
+    <!-- Guide Page -->
+    <string name="guide_title">TilPad كىرگۈزگۈچنى قوشۇش</string>
+    <string name="guide_step1">1. TilPad نى قوزغىتىش</string>
+    <string name="guide_step2">2. TilPad غا ئالماشتۇرۇش</string>
+    <string name="guide_step1_desc">سىستېما تەڭشىكىدە TilPad نى ئېچىڭ</string>
+    <string name="guide_step2_desc">TilPad نى كىرگۈزگۈچ قىپ تاللاڭ</string>
+    <string name="guide_language_input">تىل ۋە كىرگۈزگۈچ</string>
+    <string name="guide_tap_to_enable">TilPad نى ئېچىش ئۈچۈن چېكىڭ</string>
+    <string name="guide_error_settings">سىستېما تەڭشىكىنى ئاچالمىدى</string>
+    <string name="guide_error_chooser">كىرگۈزگۈچ تاللاشنى ئاچالمىدى</string>
+
+    <!-- Common -->
+    <string name="cancel">ۋاز كەچ</string>
+    <string name="select_language">تىل تاللاش / 选择语言 / Language</string>
+    <string name="cache_cleared">غەملەك تازىلاندى</string>
+    <string name="clear_failed">تازىلاش مەغلۇپ بولدى</string>
+    <string name="cannot_open_gallery">رەسىمخانىنى ئاچالمىدى</string>
+    <string name="background_set">ئارقا كۆرۈنۈش تەڭشەلدى</string>
+    <string name="font_size_saved">خەت چوڭلۇقى ساقلاندى</string>
+</resources>

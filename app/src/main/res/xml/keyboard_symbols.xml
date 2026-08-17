@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   数字符号键盘 — 普通数字 + 常用符号 + 身份证符号。
-  点击 123 键后显示此页面。
+  修复布局溢出：keyWidth 从 10%p 改为 9.5%p，gap 从 3dp 改为 0.5dp。
+  10 × 9.5% = 95% + 10 × 0.5dp = 5dp，确保所有键显示。
 
   Row 0: 1 2 3 4 5 6 7 8 9 0
   Row 1: @ # $ % & * - + = /
   Row 2: ( ) " ' : ; , . ? !
   Row 3: [ABC] [space] [⌫] [↵]
-
-  身份证常用符号在顶部工具栏的符号面板中。
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="10%p"
+    android:keyWidth="9.5%p"
     android:keyHeight="45dp"
-    android:horizontalGap="3dp"
+    android:horizontalGap="0.5dp"
     android:verticalGap="5dp">
 
     <!-- Row 0: 数字 1-0 -->

@@ -1,6 +1,79 @@
 <resources>
-    <string name="app_name">TilPad 维语输入法</string>
+    <string name="app_name">TilPad</string>
     <string name="subtype_uyghur">Uyghur (ULY)</string>
     <string name="subtype_chinese">中文拼音</string>
     <string name="subtype_english">English</string>
+
+    <!-- Home Page -->
+    <string name="tab_home">Home</string>
+    <string name="tab_skin">Skin</string>
+    <string name="tab_font">Font</string>
+    <string name="tab_settings">Settings</string>
+    <string name="home_title">Test Keyboard</string>
+    <string name="home_hint">Tap to test Uyghur, Chinese, English input</string>
+    <string name="home_search_hint">Type here to test input</string>
+
+    <!-- Settings Page -->
+    <string name="settings_app_language">App Language</string>
+    <string name="settings_enable_ime">Enable Input Method</string>
+    <string name="settings_switch_ime">Switch Input Method</string>
+    <string name="settings_vibration">Key Vibration</string>
+    <string name="settings_sound">Key Sound</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_about">About TilPad</string>
+    <string name="settings_feedback">Share App</string>
+    <string name="settings_clear_cache">Clear Cache</string>
+    <string name="settings_sound_standard">Standard</string>
+    <string name="settings_sound_spacebar">Spacebar</string>
+    <string name="settings_sound_delete">Delete</string>
+    <string name="settings_sound_return">Return</string>
+    <string name="settings_sound_effects">Sound Effects</string>
+    <string name="settings_preview">Preview</string>
+    <string name="settings_version">Version 5.0</string>
+    <string name="settings_copyright">TilPad (c) 2026</string>
+
+    <!-- Language display names -->
+    <string name="language_ug">Uyghur</string>
+    <string name="language_zh">Chinese</string>
+    <string name="language_en">English</string>
+
+    <!-- Skin Page -->
+    <string name="skin_title">Keyboard Skins</string>
+    <string name="skin_default">Default White</string>
+    <string name="skin_dark">Dark</string>
+    <string name="skin_blue">Ocean Blue</string>
+    <string name="skin_green">Forest Green</string>
+    <string name="skin_pink">Rose Pink</string>
+    <string name="skin_orange">Sunset Orange</string>
+    <string name="skin_purple">Royal Purple</string>
+    <string name="skin_custom">Custom Image</string>
+    <string name="skin_applied">Skin applied</string>
+
+    <!-- Font Page -->
+    <string name="font_title">Keyboard Font</string>
+    <string name="font_default">Default</string>
+    <string name="font_round">Rounded</string>
+    <string name="font_thin">Thin</string>
+    <string name="font_applied">Font applied</string>
+    <string name="font_size">Font Size</string>
+
+    <!-- Guide Page -->
+    <string name="guide_title">Add TilPad Input Method</string>
+    <string name="guide_step1">1. Enable TilPad</string>
+    <string name="guide_step2">2. Switch to TilPad</string>
+    <string name="guide_step1_desc">Turn on TilPad in system settings</string>
+    <string name="guide_step2_desc">Select TilPad as your input method</string>
+    <string name="guide_language_input">Language &amp; Input</string>
+    <string name="guide_tap_to_enable">Tap to enable TilPad</string>
+    <string name="guide_error_settings">Cannot open system settings</string>
+    <string name="guide_error_chooser">Cannot open input method chooser</string>
+
+    <!-- Common -->
+    <string name="cancel">Cancel</string>
+    <string name="select_language">Select Language / تىل تاللاش / Language</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="clear_failed">Clear failed</string>
+    <string name="cannot_open_gallery">Cannot open gallery</string>
+    <string name="background_set">Background set</string>
+    <string name="font_size_saved">Font size saved</string>
 </resources>

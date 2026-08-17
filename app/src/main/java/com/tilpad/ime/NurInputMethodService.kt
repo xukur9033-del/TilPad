@@ -3,10 +3,16 @@ package com.tilpad.ime
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
+import android.media.AudioManager
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -17,67 +23,53 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 
 /**
- * TilPad 输入法服务 v3 — 完整版。
+ * TilPad 输入法服务 v5 — 修复崩溃 + UI 渲染问题。
  *
- * 功能：
- * 1. 顶部工具栏（下拉/齿轮/布局/剪贴板/表情/头像/快捷图标/维语/中文/En）
- * 2. 候选词栏（中文拼音）
- * 3. 表情面板（可切换显示）
- * 4. 剪贴板面板（自动识别复制内容，快速粘贴历史记录）
- * 5. 维语 composing 连写（不改动）
- * 6. 中文拼音输入
- * 7. 删除键修复
+ * 关键修复：
+ * - 不再使用反射修改 KeyboardView 内部字段，改用父类公开 API
+ * - 震动使用 VibrationEffect（API 26+）
+ * - 处理 -100 按键码（符号切换备用）
+ * - 所有视图操作增加空安全检查
  */
 @Suppress("DEPRECATION")
 class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
 
-    private lateinit var keyboardView: NurKeyboardView
-    private lateinit var langBtnUyghur: TextView
-    private lateinit var langBtnChinese: TextView
-    private lateinit var langBtnEnglish: TextView
-    private lateinit var candidateScroll: HorizontalScrollView
-    private lateinit var candidateContainer: LinearLayout
-    private lateinit var panelContainer: View
-    private lateinit var emojiGrid: GridView
-    private lateinit var clipboardList: android.widget.ListView
-    private lateinit var btnEmoji: View
-    private lateinit var btnSettings: View
-    private lateinit var btnQuickUyghur: View
-    private lateinit var btnClipboard: View
+    private var keyboardView: NurKeyboardView? = null
+    private var langBtnUyghur: TextView? = null
+    private var langBtnChinese: TextView? = null
+    private var langBtnEnglish: TextView? = null
+    private var candidateScroll: HorizontalScrollView? = null
+    private var candidateContainer: LinearLayout? = null
+    private var panelContainer: View? = null
+    private var emojiGrid: GridView? = null
+    private var clipboardList: android.widget.ListView? = null
+    private var btnEmoji: View? = null
+    private var btnSettings: View? = null
+    private var btnQuickUyghur: View? = null
+    private var btnClipboard: View? = null
+    private var rootView: View? = null
 
     private val composingBuffer = StringBuilder()
     private val pinyinBuffer = StringBuilder()
     private var candidates: List<String> = emptyList()
 
-    /** 表情面板是否显示 */
     private var emojiPanelVisible = false
-
-    /** 剪贴板面板是否显示 */
     private var clipboardPanelVisible = false
 
-    /** 实时监听系统剪贴板变化 */
+    private lateinit var prefs: SharedPreferences
+    private var vibrator: Vibrator? = null
+    private var audioManager: AudioManager? = null
+
     private val clipboardListener = ClipboardManager.OnPrimaryClipChangedListener {
         ClipboardHelper.checkClipboard(this)
-        refreshClipboardList()
+        clipboardAdapter?.refresh(ClipboardHelper.getHistory())
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        // 注册剪贴板监听，用户在任何地方复制文字都能自动识别
-        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        cm?.addPrimaryClipChangedListener(clipboardListener)
-    }
+    private var clipboardAdapter: ClipboardAdapter? = null
 
-    override fun onDestroy() {
-        // 注销剪贴板监听
-        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        cm?.removePrimaryClipChangedListener(clipboardListener)
-        super.onDestroy()
-    }
-
-    /** Emoji 表情列表 */
     private val emojiList = listOf(
         "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆",
         "😉", "😊", "😋", "😎", "😍", "😘", "🥰", "😗",
@@ -98,11 +90,44 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗"
     )
 
+    private val symbolList = listOf(
+        "，", "。", "、", "；", "：", "？", "！", "·",
+        "「", "」", "【", "】", "（", "）", "《", "》",
+        "…", "—", "～", "｜", "／", "＼", "＆", "％",
+        "￥", "＠", "＃", "※", "☆", "★", "○", "●",
+        "◎", "⊙", "◇", "◆", "□", "■", "△", "▲",
+        "〡", "〢", "〣", "〤", "〥", "〦", "〧", "〨",
+        "㈠", "㈡", "㈢", "㈣", "㈤", "㈥", "㈦", "㈧",
+        "℃", "℉", "°", "‰", "§", "№", "〇", "⊕",
+        "⊗", "⊥", "∥", "∠", "∟", "≡", "≌", "∽"
+    )
+
+    override fun onCreate() {
+        super.onCreate()
+        prefs = getSharedPreferences("tilpad_settings", Context.MODE_PRIVATE)
+        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        cm?.addPrimaryClipChangedListener(clipboardListener)
+    }
+
+    override fun onDestroy() {
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        cm?.removePrimaryClipChangedListener(clipboardListener)
+        super.onDestroy()
+    }
+
+    private fun isInputViewReady(): Boolean {
+        return keyboardView != null && panelContainer != null && rootView != null
+    }
+
     override fun onCreateInputView(): View? {
         val container = layoutInflater.inflate(R.layout.input_view_container, null) as View
+        rootView = container
 
         keyboardView = container.findViewById(R.id.keyboard)
-        keyboardView.setOnKeyboardActionListener(this)
+        keyboardView?.setOnKeyboardActionListener(this)
 
         langBtnUyghur = container.findViewById(R.id.btn_lang_uyghur)
         langBtnChinese = container.findViewById(R.id.btn_lang_chinese)
@@ -120,36 +145,26 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         btnQuickUyghur = container.findViewById(R.id.btn_quick_uyghur)
         btnClipboard = container.findViewById(R.id.btn_clipboard)
 
-        // 语言切换按钮
-        langBtnUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
-        langBtnChinese.setOnClickListener { switchToLanguage(NurKeyboardView.Language.CHINESE) }
-        langBtnEnglish.setOnClickListener { switchToLanguage(NurKeyboardView.Language.ENGLISH) }
+        langBtnUyghur?.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
+        langBtnChinese?.setOnClickListener { switchToLanguage(NurKeyboardView.Language.CHINESE) }
+        langBtnEnglish?.setOnClickListener { switchToLanguage(NurKeyboardView.Language.ENGLISH) }
 
-        // 表情按钮 — 切换表情面板
-        btnEmoji.setOnClickListener { toggleEmojiPanel() }
+        btnEmoji?.setOnClickListener { toggleEmojiPanel() }
 
-        // 设置按钮 — 打开设置页
-        btnSettings.setOnClickListener {
+        btnSettings?.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
 
-        // 维语快捷图标 — 直接切换到维语
-        btnQuickUyghur.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
+        btnQuickUyghur?.setOnClickListener { switchToLanguage(NurKeyboardView.Language.UYGHUR) }
+        btnClipboard?.setOnClickListener { toggleClipboardPanel() }
 
-        // 剪贴板按钮 — 切换剪贴板面板
-        btnClipboard.setOnClickListener { toggleClipboardPanel() }
-
-        // 设置 emoji grid adapter
         setupEmojiGrid()
-
-        // 设置剪贴板列表
         setupClipboardList()
-
+        applySkin()
         updateLanguageBar()
 
-        // 首次加载检查剪贴板
         ClipboardHelper.checkClipboard(this)
 
         return container
@@ -159,12 +174,13 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         super.onStartInput(attribute, restarting)
         composingBuffer.clear()
         pinyinBuffer.clear()
-        hideCandidates()
-        hideEmojiPanel()
-        hideClipboardPanel()
-        // 自动检查系统剪贴板，识别用户新复制的文本
+        if (isInputViewReady()) {
+            hideCandidates()
+            hideEmojiPanel()
+            hideClipboardPanel()
+        }
         ClipboardHelper.checkClipboard(this)
-        refreshClipboardList()
+        clipboardAdapter?.refresh(ClipboardHelper.getHistory())
     }
 
     override fun onFinishInput() {
@@ -174,19 +190,150 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     }
 
     // ============================================================
+    // 震动和音效 — 修复：使用 VibrationEffect（API 26+）
+    // ============================================================
+
+    private fun performKeyFeedback() {
+        // 震动
+        if (prefs.getBoolean("vibration_enabled", true)) {
+            try {
+                val v = vibrator
+                if (v != null && v.hasVibrator()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        v.vibrate(VibrationEffect.createOneShot(15, VibrationEffect.DEFAULT_AMPLITUDE))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        v.vibrate(15)
+                    }
+                }
+            } catch (e: Exception) {
+                // 震动失败不影响输入
+            }
+        }
+        // 音效
+        if (prefs.getBoolean("sound_enabled", false)) {
+            try {
+                val soundType = prefs.getInt("sound_type", 0)
+                val effectId = when (soundType) {
+                    0 -> AudioManager.FX_KEYPRESS_STANDARD
+                    1 -> AudioManager.FX_KEYPRESS_SPACEBAR
+                    2 -> AudioManager.FX_KEYPRESS_DELETE
+                    3 -> AudioManager.FX_KEYPRESS_RETURN
+                    else -> AudioManager.FX_KEYPRESS_STANDARD
+                }
+                audioManager?.playSoundEffect(effectId, 1.0f)
+            } catch (e: Exception) {
+                // 音效失败不影响输入
+            }
+        }
+    }
+
+    // ============================================================
+    // 皮肤系统 — 修复：使用 updateKeyTextColor 而非反射
+    // ============================================================
+
+    private fun applySkin() {
+        val skinType = prefs.getInt("skin_type", 0)
+        val container = rootView ?: return
+        val kv = keyboardView ?: return
+
+        // 获取深色按键背景 Drawable
+        val darkKeyBg = ContextCompat.getDrawable(this, R.drawable.key_background_dark)
+        val lightKeyBg = ContextCompat.getDrawable(this, R.drawable.key_background)
+
+        when (skinType) {
+            0 -> {
+                container.setBackgroundColor(Color.parseColor("#E8EAED"))
+                kv.setBackgroundColor(Color.parseColor("#E8EAED"))
+                kv.updateKeyTextColor(Color.parseColor("#333333"))
+                lightKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(0)
+            }
+            1 -> {
+                container.setBackgroundColor(Color.parseColor("#1A1A2E"))
+                kv.setBackgroundColor(Color.parseColor("#16213E"))
+                kv.updateKeyTextColor(Color.WHITE)
+                darkKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(1)
+            }
+            2 -> {
+                container.setBackgroundColor(Color.parseColor("#1A237E"))
+                kv.setBackgroundColor(Color.parseColor("#283593"))
+                kv.updateKeyTextColor(Color.WHITE)
+                darkKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(2)
+            }
+            3 -> {
+                container.setBackgroundColor(Color.parseColor("#1B5E20"))
+                kv.setBackgroundColor(Color.parseColor("#2E7D32"))
+                kv.updateKeyTextColor(Color.WHITE)
+                darkKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(3)
+            }
+            4 -> {
+                container.setBackgroundColor(Color.parseColor("#880E4F"))
+                kv.setBackgroundColor(Color.parseColor("#AD1457"))
+                kv.updateKeyTextColor(Color.WHITE)
+                darkKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(4)
+            }
+            5 -> {
+                container.setBackgroundColor(Color.parseColor("#E65100"))
+                kv.setBackgroundColor(Color.parseColor("#EF6C00"))
+                kv.updateKeyTextColor(Color.WHITE)
+                darkKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(5)
+            }
+            6 -> {
+                container.setBackgroundColor(Color.parseColor("#4A148C"))
+                kv.setBackgroundColor(Color.parseColor("#6A1B9A"))
+                kv.updateKeyTextColor(Color.WHITE)
+                darkKeyBg?.let { kv.updateKeyBackground(it) }
+                kv.setSkinType(6)
+            }
+            100 -> {
+                val bgPath = prefs.getString("skin_image_path", null)
+                if (bgPath != null) {
+                    try {
+                        val drawable = Drawable.createFromPath(bgPath)
+                        if (drawable != null) {
+                            container.background = drawable
+                            kv.setBackgroundColor(Color.TRANSPARENT)
+                            kv.updateKeyTextColor(Color.WHITE)
+                            darkKeyBg?.let { kv.updateKeyBackground(it) }
+                            kv.setSkinType(100)
+                        }
+                    } catch (e: Exception) {
+                        container.setBackgroundColor(Color.parseColor("#E8EAED"))
+                        kv.setBackgroundColor(Color.parseColor("#E8EAED"))
+                        kv.updateKeyTextColor(Color.parseColor("#333333"))
+                        lightKeyBg?.let { kv.updateKeyBackground(it) }
+                        kv.setSkinType(0)
+                    }
+                }
+            }
+        }
+
+        val fontSize = prefs.getFloat("font_size", 22f)
+        kv.updateKeyTextSize(fontSize)
+    }
+
+    // ============================================================
     // 表情面板
     // ============================================================
 
     private fun setupEmojiGrid() {
+        val grid = emojiGrid ?: return
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_list_item_1,
             emojiList
         )
-        emojiGrid.adapter = adapter
-        emojiGrid.setOnItemClickListener { _, _, position, _ ->
+        grid.adapter = adapter
+        grid.setOnItemClickListener { _, _, position, _ ->
             val ic = currentInputConnection ?: return@setOnItemClickListener
             ic.commitText(emojiList[position], 1)
+            performKeyFeedback()
         }
     }
 
@@ -195,33 +342,37 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     }
 
     private fun showEmojiPanel() {
+        val panel = panelContainer ?: return
+        val grid = emojiGrid ?: return
+        val clist = clipboardList ?: return
+        val kv = keyboardView ?: return
+
         emojiPanelVisible = true
         clipboardPanelVisible = false
-        // 显示表情网格，隐藏剪贴板列表
-        emojiGrid.visibility = View.VISIBLE
-        clipboardList.visibility = View.GONE
-        keyboardView.visibility = View.GONE
-        panelContainer.layoutParams = LinearLayout.LayoutParams(
+        grid.visibility = View.VISIBLE
+        clist.visibility = View.GONE
+        kv.visibility = View.GONE
+        panel.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            240 * resources.displayMetrics.density.toInt()
+            (240 * resources.displayMetrics.density).toInt()
         )
-        panelContainer.visibility = View.VISIBLE
+        panel.visibility = View.VISIBLE
     }
 
     private fun hideEmojiPanel() {
+        val panel = panelContainer ?: return
+        val kv = keyboardView ?: return
         emojiPanelVisible = false
-        panelContainer.visibility = View.GONE
-        keyboardView.visibility = View.VISIBLE
+        panel.visibility = View.GONE
+        kv.visibility = View.VISIBLE
     }
 
     // ============================================================
     // 剪贴板面板
     // ============================================================
 
-    private var clipboardAdapter: ClipboardAdapter? = null
-
-    /** 设置剪贴板列表适配器 */
     private fun setupClipboardList() {
+        val list = clipboardList ?: return
         val items = ClipboardHelper.getHistory().toMutableList()
         clipboardAdapter = ClipboardAdapter(
             context = this,
@@ -235,58 +386,50 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             },
             onDelete = { position ->
                 ClipboardHelper.removeHistoryItem(position)
-                refreshClipboardList()
+                clipboardAdapter?.refresh(ClipboardHelper.getHistory())
                 if (ClipboardHelper.getHistory().isEmpty()) {
                     hideClipboardPanel()
                 }
             }
         )
-        clipboardList.adapter = clipboardAdapter
+        list.adapter = clipboardAdapter
     }
 
-    /** 刷新剪贴板列表数据 */
-    private fun refreshClipboardList() {
-        clipboardAdapter?.refresh(ClipboardHelper.getHistory())
-    }
-
-    /** 切换剪贴板面板显示/隐藏 */
     private fun toggleClipboardPanel() {
-        if (clipboardPanelVisible) {
-            hideClipboardPanel()
-        } else {
-            showClipboardPanel()
-        }
+        if (clipboardPanelVisible) hideClipboardPanel() else showClipboardPanel()
     }
 
-    /** 显示剪贴板面板 */
     private fun showClipboardPanel() {
-        // 先检查剪贴板最新内容
+        val panel = panelContainer ?: return
+        val grid = emojiGrid ?: return
+        val clist = clipboardList ?: return
+        val kv = keyboardView ?: return
+
         ClipboardHelper.checkClipboard(this)
-        refreshClipboardList()
+        clipboardAdapter?.refresh(ClipboardHelper.getHistory())
 
         clipboardPanelVisible = true
         emojiPanelVisible = false
-        // 显示剪贴板列表，隐藏表情网格
-        clipboardList.visibility = View.VISIBLE
-        emojiGrid.visibility = View.GONE
-        keyboardView.visibility = View.GONE
-        panelContainer.layoutParams = LinearLayout.LayoutParams(
+        clist.visibility = View.VISIBLE
+        grid.visibility = View.GONE
+        kv.visibility = View.GONE
+        panel.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            240 * resources.displayMetrics.density.toInt()
+            (240 * resources.displayMetrics.density).toInt()
         )
-        panelContainer.visibility = View.VISIBLE
+        panel.visibility = View.VISIBLE
 
-        // 如果没有历史记录，提示用户
         if (ClipboardHelper.getHistory().isEmpty()) {
             Toast.makeText(this, "暂无剪贴板记录\n复制文字后会自动显示在这里", Toast.LENGTH_SHORT).show()
         }
     }
 
-    /** 隐藏剪贴板面板 */
     private fun hideClipboardPanel() {
+        val panel = panelContainer ?: return
+        val kv = keyboardView ?: return
         clipboardPanelVisible = false
-        panelContainer.visibility = View.GONE
-        keyboardView.visibility = View.VISIBLE
+        panel.visibility = View.GONE
+        kv.visibility = View.VISIBLE
     }
 
     // ============================================================
@@ -298,39 +441,42 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
         commitPinyin()
         hideEmojiPanel()
         hideClipboardPanel()
-        keyboardView.switchToLanguage(lang)
+        keyboardView?.switchToLanguage(lang)
         updateLanguageBar()
     }
 
     private fun updateLanguageBar() {
+        val kv = keyboardView ?: return
         val activeColor = Color.parseColor("#2563EB")
         val activeText = Color.WHITE
         val inactiveBg = Color.parseColor("#F5F5F5")
         val inactiveText = Color.parseColor("#666666")
 
-        val current = keyboardView.currentLanguage
+        val current = kv.currentLanguage
 
-        langBtnUyghur.setBackgroundColor(if (current == NurKeyboardView.Language.UYGHUR) activeColor else inactiveBg)
-        langBtnUyghur.setTextColor(if (current == NurKeyboardView.Language.UYGHUR) activeText else inactiveText)
+        langBtnUyghur?.setBackgroundColor(if (current == NurKeyboardView.Language.UYGHUR) activeColor else inactiveBg)
+        langBtnUyghur?.setTextColor(if (current == NurKeyboardView.Language.UYGHUR) activeText else inactiveText)
 
-        langBtnChinese.setBackgroundColor(if (current == NurKeyboardView.Language.CHINESE) activeColor else inactiveBg)
-        langBtnChinese.setTextColor(if (current == NurKeyboardView.Language.CHINESE) activeText else inactiveText)
+        langBtnChinese?.setBackgroundColor(if (current == NurKeyboardView.Language.CHINESE) activeColor else inactiveBg)
+        langBtnChinese?.setTextColor(if (current == NurKeyboardView.Language.CHINESE) activeText else inactiveText)
 
-        langBtnEnglish.setBackgroundColor(if (current == NurKeyboardView.Language.ENGLISH) activeColor else inactiveBg)
-        langBtnEnglish.setTextColor(if (current == NurKeyboardView.Language.ENGLISH) activeText else inactiveText)
+        langBtnEnglish?.setBackgroundColor(if (current == NurKeyboardView.Language.ENGLISH) activeColor else inactiveBg)
+        langBtnEnglish?.setTextColor(if (current == NurKeyboardView.Language.ENGLISH) activeText else inactiveText)
     }
 
     // ============================================================
-    // 按键事件
+    // 按键事件 — 修复：处理 -100 按键码
     // ============================================================
 
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic = currentInputConnection ?: return
+        performKeyFeedback()
 
         when (primaryCode) {
             NurKeyboardView.KEYCODE_LANGUAGE_SWITCH -> {
+                val kv = keyboardView ?: return
                 switchToLanguage(
-                    when (keyboardView.currentLanguage) {
+                    when (kv.currentLanguage) {
                         NurKeyboardView.Language.UYGHUR -> NurKeyboardView.Language.CHINESE
                         NurKeyboardView.Language.CHINESE -> NurKeyboardView.Language.ENGLISH
                         NurKeyboardView.Language.ENGLISH -> NurKeyboardView.Language.UYGHUR
@@ -345,25 +491,28 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                 ic.deleteSurroundingText(1000, 0)
             }
 
+            NurKeyboardView.KEYCODE_SYMBOL_SWITCH,
+            NurKeyboardView.KEYCODE_SYMBOL_SWITCH_ALT -> {
+                val kv = keyboardView ?: return
+                commitComposing()
+                commitPinyin()
+                if (kv.isSymbolMode) {
+                    kv.switchBackFromSymbols()
+                } else {
+                    kv.switchToSymbols()
+                }
+            }
+
             Keyboard.KEYCODE_DELETE -> handleBackspace(ic)
             Keyboard.KEYCODE_DONE -> handleEnter(ic)
 
             Keyboard.KEYCODE_SHIFT -> {
-                if (keyboardView.currentLanguage == NurKeyboardView.Language.UYGHUR && !keyboardView.isSymbolMode) {
+                val kv = keyboardView ?: return
+                if (kv.currentLanguage == NurKeyboardView.Language.UYGHUR && !kv.isSymbolMode) {
                     commitComposing()
-                    keyboardView.toggleUyghurShift()
+                    kv.toggleUyghurShift()
                 } else {
-                    keyboardView.isShifted = !keyboardView.isShifted
-                }
-            }
-
-            NurKeyboardView.KEYCODE_SYMBOL_SWITCH -> {
-                commitComposing()
-                commitPinyin()
-                if (keyboardView.isSymbolMode) {
-                    keyboardView.switchBackFromSymbols()
-                } else {
-                    keyboardView.switchToSymbols()
+                    kv.isShifted = !kv.isShifted
                 }
             }
 
@@ -378,13 +527,15 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     override fun onText(text: CharSequence?) {
         val ic = currentInputConnection ?: return
         val outputText = text?.toString() ?: return
+        val kv = keyboardView ?: return
+        performKeyFeedback()
 
-        if (keyboardView.isSymbolMode) {
+        if (kv.isSymbolMode) {
             ic.commitText(outputText, 1)
             return
         }
 
-        when (keyboardView.currentLanguage) {
+        when (kv.currentLanguage) {
             NurKeyboardView.Language.UYGHUR -> {
                 composingBuffer.append(outputText)
                 ic.setComposingText(composingBuffer.toString(), 1)
@@ -403,12 +554,14 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     // ============================================================
 
     private fun handleCharacter(ch: Char, ic: InputConnection) {
-        if (keyboardView.isSymbolMode) {
+        val kv = keyboardView ?: return
+
+        if (kv.isSymbolMode) {
             ic.commitText(ch.toString(), 1)
             return
         }
 
-        when (keyboardView.currentLanguage) {
+        when (kv.currentLanguage) {
             NurKeyboardView.Language.UYGHUR -> {
                 if (ch == ' ') {
                     commitComposing()
@@ -468,7 +621,9 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     }
 
     private fun showCandidates() {
-        candidateContainer.removeAllViews()
+        val scroll = candidateScroll ?: return
+        val container = candidateContainer ?: return
+        container.removeAllViews()
         if (candidates.isEmpty()) {
             hideCandidates()
             return
@@ -489,7 +644,7 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                     hideCandidates()
                 }
             }
-            candidateContainer.addView(tv)
+            container.addView(tv)
 
             if (index < candidates.size - 1) {
                 val divider = View(this)
@@ -497,15 +652,15 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
                     setMargins(0, 6, 0, 6)
                 }
                 divider.setBackgroundColor(Color.parseColor("#DDDDDD"))
-                candidateContainer.addView(divider)
+                container.addView(divider)
             }
         }
 
-        candidateScroll.visibility = View.VISIBLE
+        scroll.visibility = View.VISIBLE
     }
 
     private fun hideCandidates() {
-        candidateScroll.visibility = View.GONE
+        candidateScroll?.visibility = View.GONE
         candidates = emptyList()
     }
 
@@ -514,9 +669,10 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
     // ============================================================
 
     private fun handleBackspace(ic: InputConnection) {
-        // 1. 中文拼音模式
-        if (keyboardView.currentLanguage == NurKeyboardView.Language.CHINESE
-            && !keyboardView.isSymbolMode
+        val kv = keyboardView ?: return
+
+        if (kv.currentLanguage == NurKeyboardView.Language.CHINESE
+            && !kv.isSymbolMode
             && pinyinBuffer.isNotEmpty()
         ) {
             pinyinBuffer.deleteCharAt(pinyinBuffer.length - 1)
@@ -529,9 +685,8 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             return
         }
 
-        // 2. 维语 composing 模式
-        if (keyboardView.currentLanguage == NurKeyboardView.Language.UYGHUR
-            && !keyboardView.isSymbolMode
+        if (kv.currentLanguage == NurKeyboardView.Language.UYGHUR
+            && !kv.isSymbolMode
             && composingBuffer.isNotEmpty()
         ) {
             composingBuffer.deleteCharAt(composingBuffer.length - 1)
@@ -543,14 +698,12 @@ class NurInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActio
             return
         }
 
-        // 3. 有选中文本
         val selectedText = ic.getSelectedText(0)
         if (selectedText != null && selectedText.isNotEmpty()) {
             ic.commitText("", 1)
             return
         }
 
-        // 4. 普通删除
         ic.deleteSurroundingText(1, 0)
     }
 

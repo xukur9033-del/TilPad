@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  按键背景 Selector — 现代风格，白色字体。
-  深色半透明背景，按键文字白色，确保自定义图片背景时文字清晰可见。
+  按键背景 Selector — 百度/微信风格白色圆角。
+  用于 Canvas 键盘的默认背景（实际颜色由 onDraw 控制，此文件仅备用）。
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 按下状态 -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="#802563EB" />
+            <solid android:color="#D0E4FF" />
             <corners android:radius="8dp" />
         </shape>
     </item>
-    <!-- 功能键选中状态 -->
-    <item android:state_checkable="true" android:state_checked="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#802563EB" />
-            <corners android:radius="8dp" />
-        </shape>
-    </item>
-    <!-- 普通按键默认状态 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#A637474F" />
+            <solid android:color="#FFFFFF" />
             <corners android:radius="8dp" />
         </shape>
     </item>

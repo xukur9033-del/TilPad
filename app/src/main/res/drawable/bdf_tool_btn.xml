@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 百度输入法同款圆形工具栏按钮：白色底 + 8%阴影 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#FFFFFF" />
+    <stroke android:width="0dp" android:color="@android:color/transparent" />
+</shape>

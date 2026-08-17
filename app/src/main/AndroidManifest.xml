@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 震动权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -8,10 +11,6 @@
         android:supportsRtl="true"
         android:theme="@style/TilPadTheme">
 
-        <!--
-          设置入口 Activity — 让 App 在桌面有图标。
-          用户点桌面图标后打开此页面，可以跳转到系统输入法设置。
-        -->
         <activity
             android:name=".SettingsActivity"
             android:exported="true"
@@ -22,15 +21,14 @@
             </intent-filter>
         </activity>
 
-        <!--
-          输入法服务声明。
-          - android:permission="android.permission.BIND_INPUT_METHOD" 是系统要求的权限，
-            只有系统 InputMethodManager 可以绑定此 Service。
-          - intent-filter 的 action 必须为 android.view.InputMethod。
-          - meta-data 指向 method.xml，定义输入法支持的 subtype（语言/模式）。
-        -->
+        <activity
+            android:name=".GuideActivity"
+            android:exported="false"
+            android:label=""
+            android:theme="@style/TilPadTheme" />
+
         <service
-            android:name=".NurInputMethodService"
+            android:name=".TilPadInputMethodService"
             android:exported="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_INPUT_METHOD">

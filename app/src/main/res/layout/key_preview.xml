@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 按键放大预览弹出布局 — 现代风格白色圆角 -->
+<!-- 按键放大预览弹出布局 — 白色圆角，配合白色按键文字 -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

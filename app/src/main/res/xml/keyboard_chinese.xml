@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  中文键盘布局 — 现代风格，拼音 26 键。
-  不设数字行，123 键在左下角。
+  中文键盘布局 — 拼音 26 键。
+  修复 p 键及右侧键不显示：减小 keyWidth 和 horizontalGap。
 
   Row 1: q w e r t y u i o p
   Row 2: a s d f g h j k l '
@@ -9,9 +9,9 @@
   Row 4: [123] [🌐] [space] [↵]
 -->
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="10%p"
+    android:keyWidth="9.5%p"
     android:keyHeight="45dp"
-    android:horizontalGap="3dp"
+    android:horizontalGap="0.5dp"
     android:verticalGap="5dp">
 
     <!-- Row 1: q w e r t y u i o p -->
@@ -46,13 +46,13 @@
     <Row>
         <Key android:codes="-1"  android:keyLabel="⇧" android:keyWidth="13%p"
              android:isModifier="true" android:keyEdgeFlags="left" />
-        <Key android:codes="122" android:keyLabel="z" android:keyWidth="8.5%p" />
-        <Key android:codes="120" android:keyLabel="x" android:keyWidth="8.5%p" />
-        <Key android:codes="99"  android:keyLabel="c" android:keyWidth="8.5%p" />
-        <Key android:codes="118" android:keyLabel="v" android:keyWidth="8.5%p" />
-        <Key android:codes="98"  android:keyLabel="b" android:keyWidth="8.5%p" />
-        <Key android:codes="110" android:keyLabel="n" android:keyWidth="8.5%p" />
-        <Key android:codes="109" android:keyLabel="m" android:keyWidth="8.5%p" />
+        <Key android:codes="122" android:keyLabel="z" android:keyWidth="9.5%p" />
+        <Key android:codes="120" android:keyLabel="x" android:keyWidth="9.5%p" />
+        <Key android:codes="99"  android:keyLabel="c" android:keyWidth="9.5%p" />
+        <Key android:codes="118" android:keyLabel="v" android:keyWidth="9.5%p" />
+        <Key android:codes="98"  android:keyLabel="b" android:keyWidth="9.5%p" />
+        <Key android:codes="110" android:keyLabel="n" android:keyWidth="9.5%p" />
+        <Key android:codes="109" android:keyLabel="m" android:keyWidth="9.5%p" />
         <Key android:codes="-5"  android:keyLabel="⌫" android:keyWidth="13%p"
              android:isRepeatable="true" android:keyEdgeFlags="right" />
     </Row>

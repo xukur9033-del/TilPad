@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  深色主题按键背景 — 深色半透明底色 + 白色文字。
+  用于深色/图片皮肤主题。
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#802563EB" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <item android:state_checkable="true" android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#802563EB" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#8037474F" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</selector>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  输入法键盘视图布局 — 现代风格。
-  浅灰背景 + 白色圆角按键 + 适当间距。
-  参考微信/搜狗输入法风格。
+  输入法键盘视图布局 — 与 input_view_container.xml 中的键盘属性保持一致。
 -->
 <com.tilpad.ime.NurKeyboardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,15 +10,15 @@
     android:layout_alignParentBottom="true"
     android:background="#E8EAED"
     android:keyBackground="@drawable/key_background"
-    android:keyTextColor="#1A1A1A"
+    android:keyTextColor="#333333"
     android:keyTextSize="22sp"
     android:labelTextSize="14sp"
     android:keyPreviewLayout="@layout/key_preview"
     android:keyPreviewOffset="2dp"
-    android:verticalGap="6dp"
-    android:horizontalGap="5dp"
-    android:paddingTop="8dp"
+    android:verticalGap="5dp"
+    android:horizontalGap="0.5dp"
+    android:paddingTop="6dp"
     android:paddingBottom="4dp"
-    android:paddingStart="4dp"
-    android:paddingEnd="4dp"
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
     android:shadowRadius="0.0" />
