@@ -208,8 +208,6 @@ class TilPadKeyboardView @JvmOverloads constructor(
     /** 逗号键长按输出 */
     private val commaLongPress = listOf("?", ":", ";", "!", "\u3001", "(", ")", "\u201C", "\u201D", "\u2026")
 
-    private var symbolPopup: PopupWindow? = null
-
     // 绘制参数 — 百度输入法同款样式
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -430,19 +428,14 @@ class TilPadKeyboardView @JvmOverloads constructor(
             Key(104, letterLabel("h"), "h", secondaryLabel = "^"),
             Key(106, letterLabel("j"), "j", secondaryLabel = "&"),
             Key(107, letterLabel("k"), "k", secondaryLabel = "*"),
-            Key(108, letterLabel("l"), "l", secondaryLabel = "("),
-            Key(39, "'", "'", secondaryLabel = ")")
+            Key(108, letterLabel("l"), "l", secondaryLabel = "(")
         )
-        // Row 3: 中文→手写按钮, 英文→shift(加宽) + 减号键
+        // Row 3: 中文→手写按钮, 英文→shift(加宽)
         val row3first = if (isChinese) {
             Key(CODE_HANDWRITE, "✎", width = 1.5f, isFunctional = true, isHandwrite = true)
         } else {
-            // Shift: 普通态显示 ⇧, 锁定态显示 ⇪
-            val shiftLabel = when (shiftState) {
-                ShiftState.LOCK_CAPS -> "⇪"
-                else -> "⇧"
-            }
-            Key(CODE_SHIFT, shiftLabel, width = 1.5f, isFunctional = true, isSpecial = true, isShift = true)
+            // Shift: 用Canvas绘制自定义图标，label留空
+            Key(CODE_SHIFT, "", width = 1.5f, isFunctional = true, isSpecial = true, isShift = true)
         }
         val row3 = if (isChinese) {
             listOf(
@@ -459,7 +452,6 @@ class TilPadKeyboardView @JvmOverloads constructor(
         } else {
             listOf(
                 row3first,
-                Key(CODE_MINUS, "-", "-", width = 1.0f, isFunctional = true),
                 Key(122, letterLabel("z"), "z", secondaryLabel = ")"),
                 Key(120, letterLabel("x"), "x", secondaryLabel = "-"),
                 Key(99, letterLabel("c"), "c", secondaryLabel = "+"),
@@ -618,14 +610,15 @@ class TilPadKeyboardView @JvmOverloads constructor(
                 layoutRows.add(keys.subList(14, 19))
             }
             else -> {
-                // QWERTY: 10+10+row3+row4
-                // 英文row3=10(shift+minus+zxcvbnm+del), 中文row3=9(手写+zxcvbnm+del)
+                // QWERTY: 10+9+row3+row4
+                // row1=10(q-p), row2=9(a-l), 英文row3=9(shift+zxcvbnm+del), 中文row3=9(手写+zxcvbnm+del)
                 // 英文row4=5, 中文row4=6
                 layoutRows.add(keys.subList(0, 10))
-                layoutRows.add(keys.subList(10, 20))
-                val row3Size = if (currentLanguage == Language.ENGLISH) 10 else 9
-                layoutRows.add(keys.subList(20, 20 + row3Size))
-                val row4Start = 20 + row3Size
+                layoutRows.add(keys.subList(10, 19))
+                val row3Start = 19
+                val row3Size = 9  // 英文和中文都是9键
+                layoutRows.add(keys.subList(row3Start, row3Start + row3Size))
+                val row4Start = row3Start + row3Size
                 val row4Size = keys.size - row4Start
                 if (row4Size > 0) {
                     layoutRows.add(keys.subList(row4Start, row4Start + row4Size))
@@ -767,7 +760,7 @@ class TilPadKeyboardView @JvmOverloads constructor(
             paint.textAlign = Paint.Align.CENTER
 
             // 人物卡片图标按键不绘制文字
-            if (!key.isSymbolPerson) {
+            if (!key.isSymbolPerson && !key.isShift) {
                 val fm = paint.fontMetrics
                 val textHeight = fm.descent - fm.ascent
                 // 有副标签时主文字下移；无副标签时居中
@@ -790,6 +783,11 @@ class TilPadKeyboardView @JvmOverloads constructor(
                 }
             }
 
+            // Shift键 — 绘制自定义线框图标
+            if (key.isShift) {
+                drawShiftIcon(canvas, rect, density, shiftState, tc, isPressed)
+            }
+
             // 人物卡片图标按键 — 绘制线条风格图标
             if (key.isSymbolPerson) {
                 drawPersonCardIcon(canvas, rect, density, tc)
@@ -800,6 +798,127 @@ class TilPadKeyboardView @JvmOverloads constructor(
                 drawLineMicrophone(canvas, rect, density)
             }
         }
+
+        // 长按符号弹窗 — 内联绘制（不用PopupWindow）
+        if (isSymbolPopupShowing && symbolPopupSymbols.isNotEmpty()) {
+            drawSymbolPopup(canvas, density)
+        }
+    }
+
+    /**
+     * 绘制长按符号弹窗 — 百度同款样式。
+     * 白色圆角背景 + 阴影 + 等宽符号排列 + 蓝色高亮选中项。
+     */
+    private fun drawSymbolPopup(canvas: Canvas, density: Float) {
+        val rect = symbolPopupRect
+
+        // 阴影层
+        shadowPaint.color = Color.parseColor("#30000000")
+        shadowPaint.style = Paint.Style.FILL
+        val shadowOffset = 2f * density
+        val shadowRect = RectF(
+            rect.left + shadowOffset, rect.top + shadowOffset,
+            rect.right + shadowOffset, rect.bottom + shadowOffset
+        )
+        canvas.drawRoundRect(shadowRect, 8f * density, 8f * density, shadowPaint)
+
+        // 白色背景
+        bgPaint.color = Color.parseColor("#FFFFFF")
+        bgPaint.style = Paint.Style.FILL
+        canvas.drawRoundRect(rect, 8f * density, 8f * density, bgPaint)
+
+        // 边框
+        paint.color = Color.parseColor("#E0E0E0")
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 1f * density
+        canvas.drawRoundRect(rect, 8f * density, 8f * density, paint)
+        paint.style = Paint.Style.FILL
+
+        // 符号文字
+        val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            textSize = 20f * density
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+        val highlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#1565C0")
+            style = Paint.Style.FILL
+        }
+
+        val sw = symbolPopupSymbolWidth
+        for (i in symbolPopupSymbols.indices) {
+            val left = rect.left + i * sw
+            val right = rect.left + (i + 1) * sw
+            val centerX = (left + right) / 2f
+            val centerY = rect.centerY()
+
+            if (i == symbolPopupSelectedIndex) {
+                val hlRect = RectF(left + 1f * density, rect.top + 2f * density,
+                                   right - 1f * density, rect.bottom - 2f * density)
+                canvas.drawRoundRect(hlRect, 6f * density, 6f * density, highlightPaint)
+                textPaint.color = Color.parseColor("#FFFFFF")
+            } else {
+                textPaint.color = Color.parseColor("#333333")
+            }
+
+            val fm = textPaint.fontMetrics
+            val textY = centerY + (fm.descent - fm.ascent) / 2f - fm.descent
+            canvas.drawText(symbolPopupSymbols[i], centerX, textY, textPaint)
+        }
+    }
+
+    /**
+     * 绘制 Shift 图标 — 单一 Path 连续轮廓。
+     * 上面是向上箭头（三角形），中间是箭杆（竖矩形），底部是方形底座。
+     * 普通态：空心描边 ⇧
+     * 锁定态：实心填充 ⇪
+     */
+    private fun drawShiftIcon(canvas: Canvas, rect: RectF, density: Float,
+                               state: ShiftState, color: Int, isPressed: Boolean) {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            this.color = color
+            style = if (state == ShiftState.LOCK_CAPS) Paint.Style.FILL else Paint.Style.STROKE
+            strokeWidth = 2.5f * density
+            strokeCap = Paint.Cap.ROUND
+            strokeJoin = Paint.Join.ROUND
+        }
+
+        val cx = rect.centerX()
+        val iconW = 16f * density
+        val iconH = 22f * density
+        val top = rect.centerY() - iconH / 2f
+        val bottom = rect.centerY() + iconH / 2f
+
+        // 尺寸比例
+        val arrowH = iconH * 0.38f         // 箭头高度
+        val stemH = iconH * 0.42f          // 箭杆高度
+        val arrowHalfW = iconW / 2f         // 箭头半宽（最宽）
+        val stemHalfW = iconW * 0.22f       // 箭杆半宽（最窄）
+        val baseHalfW = iconW * 0.45f      // 底座半宽（比箭杆宽）
+
+        // Y 坐标
+        val arrowBottomY = top + arrowH
+        val stemBottomY = arrowBottomY + stemH
+        val baseBottomY = bottom
+
+        // 单一连续轮廓 Path
+        // 箭尖 → 左箭头底 → 左箭杆顶 → 左箭杆底 → 左底座顶 → 左底座底
+        // → 右底座底 → 右底座顶 → 右箭杆底 → 右箭杆顶 → 右箭头底 → 闭合
+        val path = Path()
+        path.moveTo(cx, top)                                      // 箭尖
+        path.lineTo(cx - arrowHalfW, arrowBottomY)                // 箭头左下角
+        path.lineTo(cx - stemHalfW, arrowBottomY)                 // 箭杆左上角（向内收）
+        path.lineTo(cx - stemHalfW, stemBottomY)                  // 箭杆左下角
+        path.lineTo(cx - baseHalfW, stemBottomY)                  // 底座左上角（向外扩）
+        path.lineTo(cx - baseHalfW, baseBottomY)                 // 底座左下角
+        path.lineTo(cx + baseHalfW, baseBottomY)                 // 底座右下角
+        path.lineTo(cx + baseHalfW, stemBottomY)                  // 底座右上角
+        path.lineTo(cx + stemHalfW, stemBottomY)                  // 箭杆右下角（向内收）
+        path.lineTo(cx + stemHalfW, arrowBottomY)                 // 箭杆右上角
+        path.lineTo(cx + arrowHalfW, arrowBottomY)                // 箭头右下角（向外扩）
+        path.close()                                              // 回到箭尖
+
+        canvas.drawPath(path, paint)
     }
 
     /**
@@ -902,31 +1021,52 @@ class TilPadKeyboardView @JvmOverloads constructor(
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x; val y = event.y
+        val action = event.actionMasked  // 使用 actionMasked 避免多指索引干扰
 
-        // 符号弹窗显示时 — 拦截触摸事件用于滑动选取（使用视图坐标，非屏幕坐标）
+        // 符号弹窗显示时 — 直接处理滑动选取（内联Canvas，无PopupWindow）
         if (isSymbolPopupShowing) {
-            when (event.action) {
+            when (action) {
                 MotionEvent.ACTION_MOVE -> {
-                    symbolPopupTouchHandler?.invoke(x, y, MotionEvent.ACTION_MOVE)
+                    // 精准计算：手指 x 相对弹窗左边缘
+                    val relX = x - symbolPopupRect.left
+                    val newIndex = if (symbolPopupSymbolWidth > 0) {
+                        (relX / symbolPopupSymbolWidth).toInt()
+                            .coerceIn(0, symbolPopupSymbols.size - 1)
+                    } else {
+                        0
+                    }
+                    if (newIndex != symbolPopupSelectedIndex) {
+                        symbolPopupSelectedIndex = newIndex
+                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        invalidate()
+                    }
+                    return true
                 }
                 MotionEvent.ACTION_UP -> {
-                    symbolPopupTouchHandler?.invoke(x, y, MotionEvent.ACTION_UP)
+                    // 松开时输入当前选中的符号
+                    val selected = symbolPopupSymbols.getOrElse(symbolPopupSelectedIndex) { symbolPopupSymbols.firstOrNull() }
+                    if (selected != null) {
+                        onLongPressSymbolListener?.invoke(selected)
+                    }
+                    dismissSymbolPopup()
+                    return true
                 }
-                MotionEvent.ACTION_CANCEL -> {
-                    symbolPopup?.dismiss()
-                    isSymbolPopupShowing = false
-                    symbolPopupTouchHandler = null
-                    symbolPopupView = null
-                    currentPopupSelectedIndex = -1
-                    currentPopupSymbols = emptyList()
-                    pressedIndex = -1
-                    invalidate()
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_POINTER_UP -> {
+                    dismissSymbolPopup()
+                    return true
+                }
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
+                    // 新触摸序列开始 — 先关闭弹窗，再正常处理本次按下
+                    dismissSymbolPopup()
+                    // 不 return，继续往下走正常处理
+                }
+                else -> {
+                    return true  // 消费其他事件，不干扰弹窗
                 }
             }
-            return true
         }
 
-        when (event.action) {
+        when (action) {
             MotionEvent.ACTION_DOWN -> {
                 downX = x; downY = y
                 pressedIndex = findKeyIndex(x, y)
@@ -936,9 +1076,6 @@ class TilPadKeyboardView @JvmOverloads constructor(
                 invalidate()
                 if (pressedIndex >= 0) {
                     val key = keys[pressedIndex]
-                    // 百度同款：按下字母/数字键时弹出大字预览
-                    val rect = keyRects[pressedIndex]
-                    showKeyPreview(key, rect)
                     if (key.isShift) {
                         // 英文 shift: 三态切换 (长按不触发，仅单击)
                     } else if (key.isSpace) {
@@ -982,14 +1119,11 @@ class TilPadKeyboardView @JvmOverloads constructor(
                 }
                 val newIndex = findKeyIndex(x, y)
                 if (newIndex != pressedIndex) {
-                    // 手指移到别的按键 — 隐藏大字预览
-                    dismissKeyPreview()
                     pressedIndex = newIndex; invalidate()
                 }
             }
             MotionEvent.ACTION_UP -> {
                 longPressRunnable?.let { removeCallbacks(it) }
-                dismissKeyPreview()  // 百度同款：松手隐藏大字预览
                 // 先检查是否正在连续删除，再停止 — 顺序很重要！
                 val wasDeleting = isDeleteRepeating
                 stopDeleteRepeat()
@@ -1013,8 +1147,8 @@ class TilPadKeyboardView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_CANCEL -> {
                 longPressRunnable?.let { removeCallbacks(it) }
-                dismissKeyPreview()  // 百度同款：取消时隐藏大字预览
                 stopDeleteRepeat()
+                spaceLongPressFired = false
                 pressedIndex = -1; invalidate()
             }
         }
@@ -1160,325 +1294,62 @@ class TilPadKeyboardView @JvmOverloads constructor(
         return row1LongPress[code] ?: row2LongPress[code] ?: row3LongPress[code] ?: emptyList()
     }
 
+    // ============================================================
+    // 长按符号弹窗 — 内联Canvas绘制（不用PopupWindow，避免触摸事件被拦截）
+    // ============================================================
+    private var isSymbolPopupShowing = false
+    private var symbolPopupSymbols: List<String> = emptyList()
+    private var symbolPopupSelectedIndex: Int = -1
+    private var symbolPopupRect: RectF = RectF()  // 弹窗在键盘视图坐标系的矩形
+    private var symbolPopupSymbolWidth: Float = 0f
+
     /**
-     * 显示长按符号弹出窗口，支持滑动选取松开输入。
-     * 百度输入法风格：弹窗浮在按键上方，每个符号等宽排列，
-     * 滑动时根据手指 x 坐标精准定位到对应符号。
-     *
-     * 核心改进（解决高亮错位/选键不准）：
-     * 1. 使用 showAsDropDown 相对锚点定位 — 坐标空间自动对齐
-     * 2. 全程使用视图坐标(event.x) — 不依赖屏幕坐标转换
-     * 3. 渲染和命中检测使用同一套宽度计算 — 零误差
-     * 4. 弹窗显示后 post 校正实际位置 — 消除系统重定位偏差
-     * 5. 切换符号时触觉反馈 — 百度输入法手感
+     * 关闭符号弹窗 — 统一清理弹窗视觉状态。
+     * 不重置 spaceLongPressFired，防止主 ACTION_UP 误输出字母。
+     */
+    private fun dismissSymbolPopup() {
+        isSymbolPopupShowing = false
+        symbolPopupSymbols = emptyList()
+        symbolPopupSelectedIndex = -1
+        symbolPopupRect = RectF()
+        symbolPopupSymbolWidth = 0f
+        pressedIndex = -1
+        longPressRunnable?.let { removeCallbacks(it) }
+        longPressRunnable = null
+        invalidate()
+    }
+
+    /**
+     * 显示长按符号弹窗 — 内联绘制版。
+     * 不创建PopupWindow，直接在onDraw中绘制，触摸事件完全由onTouchEvent处理。
      */
     private fun showSymbolPopup(key: Key, symbols: List<String>, touchX: Float) {
         val density = resources.displayMetrics.density
         val symbolWidth = 42f * density
-        val popupW = (symbols.size * symbolWidth).toInt()
-        val popupH = (48 * density).toInt()
+        val popupW = (symbols.size * symbolWidth)
+        val popupH = 48f * density
 
-        // 自定义弹窗视图 — 直接绘制符号，使用实际宽度精确控制每个符号边界
-        val popupView = object : View(context) {
-            override fun onDraw(canvas: Canvas) {
-                super.onDraw(canvas)
-
-                // 阴影层 — 先画一个偏移的深色圆角矩形模拟阴影
-                val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#1A000000")
-                    style = Paint.Style.FILL
-                }
-                val shadowOffset = 1f * density
-                canvas.drawRoundRect(
-                    shadowOffset, shadowOffset,
-                    width.toFloat() + shadowOffset, height.toFloat() + shadowOffset,
-                    8f * density, 8f * density, shadowPaint
-                )
-
-                // 白色背景
-                val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#FFFFFF")
-                    style = Paint.Style.FILL
-                }
-                canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(),
-                    8f * density, 8f * density, bgPaint)
-
-                // 边框线
-                val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#E0E0E0")
-                    style = Paint.Style.STROKE
-                    strokeWidth = 1f * density
-                }
-                canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(),
-                    8f * density, 8f * density, borderPaint)
-
-                val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    textSize = 20f * density
-                    textAlign = Paint.Align.CENTER
-                    typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-                }
-                val highlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#E8EAF6")
-                    style = Paint.Style.FILL
-                }
-
-                // 使用实际视图宽度计算每个符号格 — 与命中检测完全一致
-                val actualSymbolW = if (symbols.isNotEmpty()) width.toFloat() / symbols.size else symbolWidth
-
-                for (i in symbols.indices) {
-                    val left = i * actualSymbolW
-                    val right = (i + 1) * actualSymbolW
-                    val centerX = (left + right) / 2f
-                    val centerY = height / 2f
-
-                    // 高亮选中项 — 百度风格蓝色底+白色粗体字
-                    if (i == currentPopupSelectedIndex) {
-                        val hlRect = RectF(left + 1f * density, 2f * density,
-                                           right - 1f * density, height - 2f * density)
-                        canvas.drawRoundRect(hlRect, 6f * density, 6f * density, highlightPaint)
-                        textPaint.color = Color.parseColor("#1565C0")
-                    } else {
-                        textPaint.color = Color.parseColor("#333333")
-                    }
-
-                    val fm = textPaint.fontMetrics
-                    val textY = centerY + (fm.descent - fm.ascent) / 2f - fm.descent
-                    canvas.drawText(symbols[i], centerX, textY, textPaint)
-                }
-            }
-        }
-
-        symbolPopup = PopupWindow(popupView, popupW, popupH, false).apply {
-            isOutsideTouchable = false
-            isFocusable = false
-            isClippingEnabled = false  // 允许弹窗超出屏幕，防止系统自动重定位
-            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
-        }
-
-        // 计算弹出位置（视图坐标） — 居中在按键上方
-        val rect = keyRects.getOrNull(pressedIndex)
-        val popupX = if (rect != null) {
-            (rect.centerX() - popupW / 2f).coerceAtLeast(0f).coerceAtMost((width - popupW).toFloat())
+        // 计算弹窗位置 — 居中在按键上方
+        val keyRect = keyRects.getOrNull(pressedIndex)
+        val popupX = if (keyRect != null) {
+            (keyRect.centerX() - popupW / 2f)
+                .coerceAtLeast(0f)
+                .coerceAtMost((width - popupW))
         } else {
-            (touchX - popupW / 2f).coerceAtLeast(0f)
+            touchX - popupW / 2f
         }
-        val popupY = (rect?.top ?: 0f) - popupH - 4f * density
+        val popupY = ((keyRect?.top ?: 0f) - popupH - 4f * density).coerceAtLeast(0f)
 
-        // 使用 showAsDropDown 相对锚点定位 — 自动处理坐标空间
-        // Gravity.TOP: 弹窗底部 = 锚点 top + yoff → 弹窗顶部 = 锚点 top + yoff - popupH
-        // xoff = popupX（视图坐标），yoff = popupY + popupH（使弹窗顶部 = popupY）
-        val yoff = (popupY + popupH).toInt()
-        symbolPopup?.showAsDropDown(this, popupX.toInt(), yoff, Gravity.TOP)
-
-        // 存储视图坐标位置 — 用于精准滑动检测
-        // 触摸事件使用 event.x（视图坐标），弹窗左边缘也是视图坐标 popupX
-        symbolPopupViewX = popupX
-        // 符号格宽度 = 实际弹窗宽度 / 符号数 — 与渲染完全一致
-        symbolPopupSymbolWidth = popupW.toFloat() / symbols.size
-
-        // 弹窗显示后，获取实际位置以校正可能的系统重定位
-        popupView.post {
-            if (isSymbolPopupShowing && symbolPopup?.isShowing == true) {
-                val popupLoc = IntArray(2)
-                val viewLoc = IntArray(2)
-                popupView.getLocationOnScreen(popupLoc)
-                this@TilPadKeyboardView.getLocationOnScreen(viewLoc)
-                // 实际视图坐标 X = 弹窗屏幕X - 键盘视图屏幕X
-                val actualViewX = (popupLoc[0] - viewLoc[0]).toFloat()
-                if (actualViewX >= -10f) {  // 容差 10px
-                    symbolPopupViewX = actualViewX
-                }
-                // 使用实际弹窗宽度重新计算符号格宽度
-                if (popupView.width > 0 && symbols.isNotEmpty()) {
-                    symbolPopupSymbolWidth = popupView.width.toFloat() / symbols.size
-                }
-                popupView.invalidate()
-            }
-        }
-
-        // 初始选中第一个符号
-        currentPopupSelectedIndex = 0
-        currentPopupSymbols = symbols
+        // 存储弹窗矩形和符号
+        symbolPopupRect = RectF(popupX, popupY, popupX + popupW, popupY + popupH)
+        symbolPopupSymbolWidth = symbolWidth
+        symbolPopupSymbols = symbols
+        symbolPopupSelectedIndex = 0
         isSymbolPopupShowing = true
-        symbolPopupView = popupView
-        popupView.invalidate()
 
-        // 触摸拦截 — 使用视图坐标（与 onDraw、命中检测同一坐标系）
-        symbolPopupTouchHandler = { vx, vy, action ->
-            when (action) {
-                MotionEvent.ACTION_MOVE -> {
-                    // 精准计算：手指 x 相对弹窗左边缘（均为视图坐标）
-                    val relX = vx - symbolPopupViewX
-                    val newIndex = if (symbolPopupSymbolWidth > 0) {
-                        (relX / symbolPopupSymbolWidth).toInt()
-                            .coerceIn(0, symbols.size - 1)
-                    } else {
-                        0
-                    }
-                    if (newIndex != currentPopupSelectedIndex) {
-                        currentPopupSelectedIndex = newIndex
-                        popupView.invalidate()
-                        // 触觉反馈 — 模拟百度输入法滑过符号的触感
-                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    }
-                }
-                MotionEvent.ACTION_UP -> {
-                    // 松开时输入当前选中的符号
-                    val selected = symbols.getOrElse(currentPopupSelectedIndex) { symbols.firstOrNull() }
-                    if (selected != null) {
-                        onLongPressSymbolListener?.invoke(selected)
-                    }
-                    // 关闭弹窗
-                    symbolPopup?.dismiss()
-                    isSymbolPopupShowing = false
-                    symbolPopupTouchHandler = null
-                    symbolPopupView = null
-                    currentPopupSelectedIndex = -1
-                    currentPopupSymbols = emptyList()
-                    pressedIndex = -1
-                    invalidate()
-                }
-                MotionEvent.ACTION_CANCEL -> {
-                    symbolPopup?.dismiss()
-                    isSymbolPopupShowing = false
-                    symbolPopupTouchHandler = null
-                    symbolPopupView = null
-                    currentPopupSelectedIndex = -1
-                    currentPopupSymbols = emptyList()
-                    pressedIndex = -1
-                    invalidate()
-                }
-            }
-        }
-    }
-
-    // 符号弹窗触摸拦截 — 全部使用视图坐标，避免屏幕坐标转换误差
-    private var isSymbolPopupShowing = false
-    private var symbolPopupTouchHandler: ((Float, Float, Int) -> Unit)? = null
-    private var symbolPopupView: View? = null
-    private var symbolPopupSymbolWidth: Float = 0f  // 每个符号格的实际宽度
-    private var symbolPopupViewX: Float = 0f         // 弹窗左边缘在键盘视图坐标系的 X
-    private var currentPopupSelectedIndex: Int = -1
-    private var currentPopupSymbols: List<String> = emptyList()
-
-    // ============================================================
-    // 按键预览弹出大字 — 百度输入法标志性功能
-    // 按下字母/数字键时，按键上方弹出白色圆角大字预览
-    // 松手后自动消失，带弹簧动画
-    // ============================================================
-    private var keyPreviewPopup: PopupWindow? = null
-    private var keyPreviewView: View? = null
-    private val keyPreviewDismissRunnable = Runnable {
-        keyPreviewPopup?.dismiss()
-        keyPreviewPopup = null
-        keyPreviewView = null
-    }
-
-    /**
-     * 显示按键预览弹出 — 百度同款大字预览。
-     * 白色圆角背景 + 大字 + 阴影，居中浮在按键上方。
-     */
-    private fun showKeyPreview(key: Key, rect: RectF) {
-        // 功能键（shift/delete/enter/symbol等）不显示预览
-        if (key.isFunctional || key.isSpecial || key.isSpace || key.isSymbolPerson) return
-        // 只对有文字的键显示预览
-        if (key.label.isEmpty()) return
-
-        val density = resources.displayMetrics.density
-        val previewW = (48 * density).toInt()
-        val previewH = (56 * density).toInt()
-
-        // 计算显示文字（大写处理）
-        val isLetterKey = key.code > 0 && key.code < 128 && key.label[0].isLetter()
-        val useCaps = (currentLanguage == Language.ENGLISH && shiftState != ShiftState.NONE && isLetterKey) ||
-                       (currentLanguage == Language.PINYIN)
-        val displayLabel = if (useCaps && isLetterKey) key.label.uppercase() else key.label
-
-        // 自定义预览视图 — 直接 Canvas 绘制
-        val previewView = object : View(context) {
-            override fun onDraw(canvas: Canvas) {
-                super.onDraw(canvas)
-                // 阴影层
-                val shadowP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#30000000")  // 18% 黑色阴影
-                    style = Paint.Style.FILL
-                }
-                val shadowOffset = 3f * density
-                canvas.drawRoundRect(
-                    shadowOffset, shadowOffset,
-                    width.toFloat() + shadowOffset, height.toFloat() + shadowOffset,
-                    10f * density, 10f * density, shadowP
-                )
-                // 白色背景
-                val bgP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.parseColor("#FFFFFF")
-                    style = Paint.Style.FILL
-                }
-                canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(),
-                    10f * density, 10f * density, bgP)
-                // 大字
-                val textP = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    textSize = 30f * density
-                    textAlign = Paint.Align.CENTER
-                    typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-                    color = Color.parseColor("#222222")
-                }
-                val fm = textP.fontMetrics
-                val textY = height / 2f + (fm.descent - fm.ascent) / 2f - fm.descent
-                canvas.drawText(displayLabel, width / 2f, textY, textP)
-            }
-        }
-
-        keyPreviewPopup = PopupWindow(previewView, previewW, previewH, false).apply {
-            isOutsideTouchable = false
-            isFocusable = false
-            isClippingEnabled = false
-            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
-        }
-
-        // 计算弹出位置 — 居中在按键上方
-        val popupX = (rect.centerX() - previewW / 2f)
-            .coerceAtLeast(0f)
-            .coerceAtMost((width - previewW).toFloat())
-        val popupY = (rect.top - previewH - 2f * density).coerceAtLeast(0f)
-
-        // 弹簧动画 — 从 scale 0 缩放到 1
-        previewView.scaleX = 0.3f
-        previewView.scaleY = 0.3f
-        previewView.pivotX = previewW / 2f
-        previewView.pivotY = previewH.toFloat()
-
-        keyPreviewPopup?.showAsDropDown(this, popupX.toInt(), popupY.toInt(), Gravity.TOP)
-
-        // 弹簧动画
-        previewView.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(80)
-            .setInterpolator(android.view.animation.OvershootInterpolator(1.8f))
-            .start()
-
-        keyPreviewView = previewView
-    }
-
-    /**
-     * 隐藏按键预览 — 带淡出动画
-     */
-    private fun dismissKeyPreview() {
-        val view = keyPreviewView ?: return
-        val popup = keyPreviewPopup ?: return
-        view.animate()
-            .scaleX(0.3f)
-            .scaleY(0.3f)
-            .alpha(0f)
-            .setDuration(60)
-            .setInterpolator(android.view.animation.AccelerateInterpolator())
-            .withEndAction {
-                popup.dismiss()
-                keyPreviewPopup = null
-                keyPreviewView = null
-            }
-            .start()
+        // 触觉反馈
+        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+        invalidate()
     }
 
     fun switchToLanguage(lang: Language) {

@@ -270,6 +270,10 @@ class TilPadInputMethodService : InputMethodService() {
                 // 点击面板左上角返回按钮 → 收起 emoji 面板，回到键盘
                 showPanel(PanelType.NONE)
             }
+            setOnDeleteListener {
+                val ic = currentInputConnection
+                ic?.deleteSurroundingText(1, 0)
+            }
         }
 
         // 完整符号大页面
